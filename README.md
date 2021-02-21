@@ -1,7 +1,7 @@
 # AE405-Thrust_Stand
 Aero 405 Thrust Stand Project
 
-*By Cameron Gable*
+*By Cameron Gable (1iggy2), Anthony Russo, Hogan Hsu, Sergio Ramirez Sabogal*
 
 This project is aimed towards providing a thrust testing stand for brushless electric motors
 and propellers used by student project teams as part of Professor George Halow’s AERO 495
