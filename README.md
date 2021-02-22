@@ -1,4 +1,5 @@
 # AE405-Thrust_Stand
+![Image](http://clasp-research.engin.umich.edu/groups/s3fl/images/aero.jpg)
 Aero 405 Thrust Stand Project
 
 *By Cameron Gable (1iggy2), Anthony Russo, Hogan Hsu, Sergio Ramirez Sabogal*
