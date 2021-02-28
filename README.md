@@ -1,4 +1,4 @@
-# AE405-Thrust_Stand
+# AE405 Thrust Stand
 ![Image](http://clasp-research.engin.umich.edu/groups/s3fl/images/aero.jpg)
 Aero 405 Thrust Stand Project
 
