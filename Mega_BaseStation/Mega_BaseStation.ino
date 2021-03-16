@@ -1,4 +1,4 @@
-//AERO 405 Thrust Test Stand Code
+//AERO 405 Thrust Test Stand Code-Base Station
 // Cameron Gable | 3/15/2021
 
 //------------------------------------------Libraries
@@ -16,7 +16,7 @@
 //Time based commands
   #include <Time.h>
   #include <TimeLib.h>
-//------------------------------------------Set Up
+//------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
   RF24 radio(9, 8); // CE, CSN //create an RF24 object
   const byte address[6] = "00001"; //address through which two modules communicate.
