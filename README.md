@@ -14,3 +14,9 @@ motor and propeller sizes to be tested safely and effectively by any of the team
 AERO 495. This test stand will use sensors to measure thrust, torque, voltage, current, and RPM
 and involve a processing system for automated data collection for simple export to software like
 Excel or MatLab for analysis.
+
+# Remote GUI Explaination
+
+After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. Below is the initial flowchart of this new design:
+
+![alt text](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true)
