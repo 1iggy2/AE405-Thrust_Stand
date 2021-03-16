@@ -15,6 +15,14 @@ AERO 495. This test stand will use sensors to measure thrust, torque, voltage, c
 and involve a processing system for automated data collection for simple export to software like
 Excel or MatLab for analysis.
 
+# Base Station Logic
+
+The Base Station is the measurement and data acquistion hub of this project. Tests will be run based on the Menu ID sent from the remote. Raw sensor output, calibration, and settings will be accessed via a physical button press and the serial monitor. This is due to RAM limitations in the Arduino Nano powering the Remote. A full flowchart of the logic is provided below.
+
+<p align="center">
+  <img width="686" height="1211" src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
+</p>
+
 # Remote GUI Explaination
 
 After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. The image below is the design flowchart for the optimized remote.
