@@ -37,16 +37,26 @@ Our thrust stand has been designed with modularity as the main objective. The in
 vertical arm lengths allow for testing to occur for a variety of propeller and motor sizes. This also
 allows for the thrust stand to operate in both large and small wind tunnels, making test scheduling more convenient for the users. Our motor mounting plates will allow for the mounting of
 various motors with different bolt patterns. The various sizes of these plates will allow for testing
-on small motors and large motors on the same stand. Our unique flexure torque measurement
-device allows for torque data to be collected from all ranges of motor sizes that fit on the thrust
-testing stand. This innovation increases the effectiveness and accuracy of the data from other more
-traditional torque measurement solutions. These system design choices increase the effectiveness
-of our thrust stand and allow it to meet a wide variety of team’s thrust testing needs.
+on small motors and large motors on the same stand. 
 
 
 Long Arm Render             |  Short Arm Render
   :-------------------------:|:-------------------------:
 ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_L-Stand_Assembly_long.PNG)  |  ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_L-Stand_Assembly_short.PNG)
+
+Our unique flexure torque measurement
+device, seen below, allows for torque data to be collected from all ranges of motor sizes that fit on the thrust
+testing stand. This innovation increases the effectiveness and accuracy of the data from other more
+traditional torque measurement solutions. These system design choices increase the effectiveness
+of our thrust stand and allow it to meet a wide variety of team’s thrust testing needs.
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/FlexureTorqueMeasurement.PNG?raw=true">
+</p>
+Our design also features a pivot comprised of two pillow blocks to minimize any stiction, or static friction. A beautiful render of this pivot is shown below. A majority of the parts purchased for the structural construction came from McMaster Carr.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PIVOT.png?raw=true">
+</p>
 
 # Physical Build Simulation
 
@@ -72,12 +82,24 @@ Another accuracy concern is the drag produced by inlet air during wind tunnel te
 on the vertical arm of the test stand. The load cell measuring thrust will not be able to distinguish between this drag force and a thrust difference, thus reducing accuracy. To make sure that
 our measurement is as accurate as possible during these testing circumstances, we surveyed various cross-sectional shapes of the vertical beam using CFD simulations. STAR-CCM+ CFD simulations were used to model the drag of the
 stand. Because the only variable between these design is the vertical beam cross-section, simulations were performed using the 15 inch beam by itself, with semicircular fairings, and with one
-semicircular fairing on the front face and an elliptical section on the rear face to give the overall cross-section an airfoil shape. The simulations were then run with the respective beam suspended,
+semicircular fairing on the front face and an elliptical section on the rear face to give the overall cross-section an airfoil shape. Seen in the table below.
+
+| No Fairing | Semi-Circular Fairing | Airfoil Fairing |
+|------------|-----------------------|-----------------|
+| ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/RawDragSim.png)      | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/CircDragSim.png)                 | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/AirfoilDragSim.png)           |
+
+The simulations were then run with the respective beam suspended,
 centered in a simulated 2 foot X 2 foot wind tunnel using iterations with intake airspeed of 11, 22,
 34, 45, 56, and 67 miles per hour. The results are shown in the table below.
 
 <p align="center">
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/DragTable.PNG?raw=true">
+</p>
+
+Plotted into a graph:
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/DragChart.png?raw=true">
 </p>
 
 With this information we are designing a 3D printed airfoil to slot into the 8020 aluminium extrusion. We will also be putting our structure, shrouded with an aerodynamic
