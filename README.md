@@ -68,8 +68,18 @@ where the 90◦ bracket met the horizontal arm.
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_maxstress.png?raw=true">
 </p>
 
-STAR-CCM+ CFD simulations were used to model the drag of the
+Another accuracy concern is the drag produced by inlet air during wind tunnel testing, particularly
+on the vertical arm of the test stand. The load cell measuring thrust will not be able to distinguish between this drag force and a thrust difference, thus reducing accuracy. To make sure that
+our measurement is as accurate as possible during these testing circumstances, we surveyed various cross-sectional shapes of the vertical beam using CFD simulations. STAR-CCM+ CFD simulations were used to model the drag of the
 stand. Because the only variable between these design is the vertical beam cross-section, simulations were performed using the 15 inch beam by itself, with semicircular fairings, and with one
 semicircular fairing on the front face and an elliptical section on the rear face to give the overall cross-section an airfoil shape. The simulations were then run with the respective beam suspended,
 centered in a simulated 2 foot X 2 foot wind tunnel using iterations with intake airspeed of 11, 22,
-34, 45, 56, and 67 miles per hour.
+34, 45, 56, and 67 miles per hour. The results are shown in the table below.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/DragTable.PNG?raw=true">
+</p>
+
+With this information we are designing a 3D printed airfoil to slot into the 8020 aluminium extrusion. We will also be putting our structure, shrouded with an aerodynamic
+fairing, into the wind tunnel and testing the amount of drag that the system generates with the
+goal of minimizing this effect. This will be to validate our simulations.
