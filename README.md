@@ -20,7 +20,7 @@ Excel or MatLab for analysis.
 The Base Station is the measurement and data acquistion hub of this project. Tests will be run based on the Menu ID sent from the remote. Raw sensor output, calibration, and settings will be accessed via a physical button press and the serial monitor. This is due to RAM limitations in the Arduino Nano powering the Remote. A full flowchart of the logic is provided below.
 
 <p align="center">
-  <img width="686" height="1211" src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
 </p>
 
 # Remote GUI Explaination
@@ -28,5 +28,48 @@ The Base Station is the measurement and data acquistion hub of this project. Tes
 After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. The image below is the design flowchart for the optimized remote.
 
 <p align="center">
-  <img width="686" height="1211" src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true">
 </p>
+
+# Physical Build
+
+Our thrust stand has been designed with modularity as the main objective. The interchangeable
+vertical arm lengths allow for testing to occur for a variety of propeller and motor sizes. This also
+allows for the thrust stand to operate in both large and small wind tunnels, making test scheduling more convenient for the users. Our motor mounting plates will allow for the mounting of
+various motors with different bolt patterns. The various sizes of these plates will allow for testing
+on small motors and large motors on the same stand. Our unique flexure torque measurement
+device allows for torque data to be collected from all ranges of motor sizes that fit on the thrust
+testing stand. This innovation increases the effectiveness and accuracy of the data from other more
+traditional torque measurement solutions. These system design choices increase the effectiveness
+of our thrust stand and allow it to meet a wide variety of team’s thrust testing needs.
+
+
+Long Arm Render             |  Short Arm Render
+  :-------------------------:|:-------------------------:
+![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_L-Stand_Assembly_long.PNG)  |  ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_L-Stand_Assembly_short.PNG)
+
+# Physical Build Simulation
+
+In order to model the thrust stand system in FEA many of the complex structures
+were simplified. This included the flexure assembly being modelled as a rectangular block and
+the bearing pivot being modelled as a bearing fixture. The CAD model was done in Solidworks
+and the FEA was done in the Solidworks built-in simulation tool. The load cell and the sides of the
+pivot were modelled as roller/slider fixtures so that they would be constrained in the plane but
+can move laterally. The built-in 6061 aluminum alloy material model was applied to the model
+due to convenience, which has the same properties as the 6105-T5 alloy, just a lower yield strength.
+The mesh was generated using Solidworks’ automated mesh tool, but mesh control was applied
+in order to ensure that there were at least 3 elements across each dimension to accurately model
+the problem. In the image below, a zoomed in display of the maximum stress point is shown along with
+the mesh for the max loading condition of 20 lbf of thrust and 15 lbf-in of torque on the long
+arm model. The maximum stress ended up being in the same region for all the simulations, right
+where the 90◦ bracket met the horizontal arm.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PH1R_maxstress.png?raw=true">
+</p>
+
+STAR-CCM+ CFD simulations were used to model the drag of the
+stand. Because the only variable between these design is the vertical beam cross-section, simulations were performed using the 15 inch beam by itself, with semicircular fairings, and with one
+semicircular fairing on the front face and an elliptical section on the rear face to give the overall cross-section an airfoil shape. The simulations were then run with the respective beam suspended,
+centered in a simulated 2 foot X 2 foot wind tunnel using iterations with intake airspeed of 11, 22,
+34, 45, 56, and 67 miles per hour.
