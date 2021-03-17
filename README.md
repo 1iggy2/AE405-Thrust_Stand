@@ -104,4 +104,8 @@ Plotted into a graph:
 
 With this information we are designing a 3D printed airfoil to slot into the 8020 aluminium extrusion. We will also be putting our structure, shrouded with an aerodynamic
 fairing, into the wind tunnel and testing the amount of drag that the system generates with the
-goal of minimizing this effect. This will be to validate our simulations.
+goal of minimizing this effect. This will be to validate our simulations. Our current design for the airfoil fairing is show here.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/AerofairingCrossSection.png?raw=true">
+</p>
