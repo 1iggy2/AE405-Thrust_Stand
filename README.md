@@ -19,7 +19,6 @@ Table of Contents
 =================
 
 <!--ts-->
-   * [AE405-Thrust_Stand](#ae405-thrust-stand)
    * [Table of Contents](#table-of-contents)
    * [Construction Guide](#construction-guide)
       * [Wiring](#wiring)
