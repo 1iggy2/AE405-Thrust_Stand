@@ -16,7 +16,7 @@ and involve a processing system for automated data collection for simple export 
 Excel or MatLab for analysis.
 
 ## Wiring Guide
-The wiring and wiring diagram were constructed using the website <https://Circuito.io>, an excellent tool for circuit design. A link to the Remote Circuito project can be found [here](https://www.circuito.io/static/reply/index.html?solutionId=6052555829fa400030165b44&solutionPath=storage.circuito.io) and the Base Station Circuito project [here](https://google.com). 
+The wiring and wiring diagram were constructed using the website <https://Circuito.io>, an excellent tool for circuit design. A link to the Remote Circuito project can be found [here](https://www.circuito.io/static/reply/index.html?solutionId=6052555829fa400030165b44&solutionPath=storage.circuito.io) and the Base Station Circuito project [here](https://www.circuito.io/static/reply/index.html?solutionId=605298ebe53fd30030c5ce1c&solutionPath=storage.circuito.io). 
 ### Remote
 
 
