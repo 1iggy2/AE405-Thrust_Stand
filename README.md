@@ -15,9 +15,12 @@ AERO 495. This test stand will use sensors to measure thrust, torque, voltage, c
 and involve a processing system for automated data collection for simple export to software like
 Excel or MatLab for analysis.
 
-## Wiring Guide
+## Construction Guide
+
+### Wiring
+
 The wiring and wiring diagram were constructed using the website <https://Circuito.io>, an excellent tool for circuit design. A link to the Remote Circuito project can be found [here](https://www.circuito.io/static/reply/index.html?solutionId=6052555829fa400030165b44&solutionPath=storage.circuito.io) and the Base Station Circuito project [here](https://www.circuito.io/static/reply/index.html?solutionId=605298ebe53fd30030c5ce1c&solutionPath=storage.circuito.io). 
-### Remote
+#### Remote
 
 
 <p align="center">
@@ -28,8 +31,28 @@ The wiring and wiring diagram were constructed using the website <https://Circui
 |:--------:|:-----:|
 | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/nRF24L01%20Connections.PNG)    | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/AdafruitOLEDCircuitoDiagram.PNG) <br><br><br> *N.B. Not the same as the one code written for* |
 
-## Justification
-### Base Station Logic
+#### Base Station
+
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/BaseStationCircuitoDiagram.PNG?raw=true">
+</p>
+
+| BME280 | Hall Effect Sensor | Infrared Sensor | nRF24L01 | SD Card Shield |
+|--------|--------------------|-----------------|----------|----------------|
+| ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/BME280Connections.PNG)  | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/HallConnections.PNG)              | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/IRConnections.PNG)           | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/nRF24L01%20Connections_MEGA.PNG)    | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/SDConnections.PNG)          |
+
+*N.B. Not all components were availible on Circuito.io, additional components connections labeled in seperate diagram (Not yet created)
+
+### Thrust Stand
+
+Insert future images/schematics of thrust stand. Enough information to reconstruct.
+
+## Design Justification
+
+### CODE
+
+#### Base Station Logic
 
 The Base Station is the measurement and data acquistion hub of this project. Tests will be run based on the Menu ID sent from the remote. Raw sensor output, calibration, and settings will be accessed via a physical button press and the serial monitor. This is due to RAM limitations in the Arduino Nano powering the Remote. A full flowchart of the logic is provided below.
 
@@ -37,7 +60,7 @@ The Base Station is the measurement and data acquistion hub of this project. Tes
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
 </p>
 
-### Remote GUI Explaination
+#### Remote GUI Explaination
 
 After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. The image below is the design flowchart for the optimized remote.
 
@@ -45,7 +68,7 @@ After initial testing of the remote GUI intiailly proposed it was apparent that 
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true">
 </p>
 
-### Physical Build
+#### Physical Build
 
 Our thrust stand has been designed with modularity as the main objective. The interchangeable
 vertical arm lengths allow for testing to occur for a variety of propeller and motor sizes. This also
@@ -72,7 +95,9 @@ Our design also features a pivot comprised of two pillow blocks to minimize any 
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PIVOT.png?raw=true">
 </p>
 
-### Physical Build Simulation
+### Physical Structure
+
+#### Physical Build Simulation
 
 In order to model the thrust stand system in FEA many of the complex structures
 were simplified. This included the flexure assembly being modelled as a rectangular block and
