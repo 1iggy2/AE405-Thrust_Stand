@@ -15,6 +15,27 @@ AERO 495. This test stand will use sensors to measure thrust, torque, voltage, c
 and involve a processing system for automated data collection for simple export to software like
 Excel or MatLab for analysis.
 
+Table of Contents
+=================
+
+<!--ts-->
+   * [AE405-Thrust_Stand](#ae405-thrust-stand)
+   * [Table of Contents](#table-of-contents)
+   * [Construction Guide](#construction-guide)
+      * [Wiring](#wiring)
+        * [Remote](#remote)
+        * [Base Station](#base-station)
+      * [Thrust Stand](#thrust-stand)
+   * [Design Justification](#design-justification)
+      * [Code](#code)
+        * [Base Station Logic](base-station-logic)
+        * [Remote GUI Explaination](remote-gui-explaination)
+      * [Physical Structure Analysis and Testing](physical-structure-analysis-and-testing)
+        * [Thrust Stand Simulation](thrust-stand-simulation)
+<!--te-->
+
+
+
 ## Construction Guide
 
 ### Wiring
@@ -46,30 +67,6 @@ The wiring and wiring diagram were constructed using the website <https://Circui
 
 ### Thrust Stand
 
-Insert future images/schematics of thrust stand. Enough information to reconstruct.
-
-## Design Justification
-
-### CODE
-
-#### Base Station Logic
-
-The Base Station is the measurement and data acquistion hub of this project. Tests will be run based on the Menu ID sent from the remote. Raw sensor output, calibration, and settings will be accessed via a physical button press and the serial monitor. This is due to RAM limitations in the Arduino Nano powering the Remote. A full flowchart of the logic is provided below.
-
-<p align="center">
-  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
-</p>
-
-#### Remote GUI Explaination
-
-After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. The image below is the design flowchart for the optimized remote.
-
-<p align="center">
-  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true">
-</p>
-
-#### Physical Build
-
 Our thrust stand has been designed with modularity as the main objective. The interchangeable
 vertical arm lengths allow for testing to occur for a variety of propeller and motor sizes. This also
 allows for the thrust stand to operate in both large and small wind tunnels, making test scheduling more convenient for the users. Our motor mounting plates will allow for the mounting of
@@ -95,9 +92,30 @@ Our design also features a pivot comprised of two pillow blocks to minimize any 
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/PIVOT.png?raw=true">
 </p>
 
-### Physical Structure
 
-#### Physical Build Simulation
+## Design Justification
+
+### Code
+
+#### Base Station Logic
+
+The Base Station is the measurement and data acquistion hub of this project. Tests will be run based on the Menu ID sent from the remote. Raw sensor output, calibration, and settings will be accessed via a physical button press and the serial monitor. This is due to RAM limitations in the Arduino Nano powering the Remote. A full flowchart of the logic is provided below.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/BaseStationLogic.png?raw=true">
+</p>
+
+#### Remote GUI Explaination
+
+After initial testing of the remote GUI intiailly proposed it was apparent that the Arduino Nano did not have enough RAM to display the fully fleshed out GUI. In order to combat this we have designed a low menu count GUI to optimize the remote. This menu uses a minimal amount of unique screens to lower the RAM usage. The image below is the design flowchart for the optimized remote.
+
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Flowcharts/Low_RAM_GUI_Flowchart.png?raw=true">
+</p>
+
+### Physical Structure Analysis
+
+#### Thrust Stand Simulation
 
 In order to model the thrust stand system in FEA many of the complex structures
 were simplified. This included the flexure assembly being modelled as a rectangular block and
