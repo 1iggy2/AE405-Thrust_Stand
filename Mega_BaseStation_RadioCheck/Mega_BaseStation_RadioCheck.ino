@@ -9,7 +9,7 @@
 //------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
   RF24 radio(7, 8); // CE, CSN //create an RF24 object
-  const byte thisSlaveAddress[5] = {'R','x','A','A','A'};
+  const byte address[6] = "00001";
   char MenuNumber[14];
   bool newData = false;
   
@@ -38,7 +38,7 @@ void setup() {
     radio.begin();
     radio.setAutoAck(false);
     radio.setDataRate( RF24_250KBPS );
-    radio.openReadingPipe(0, thisSlaveAddress);
+    radio.openReadingPipe(0, address);
     radio.startListening();
   //Button Setup
     pinMode(SensorOutButtonPin,INPUT);
