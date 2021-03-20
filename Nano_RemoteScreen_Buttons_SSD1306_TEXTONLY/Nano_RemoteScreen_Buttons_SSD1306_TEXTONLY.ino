@@ -20,8 +20,8 @@
   SSD1306_text oled;
   
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
-  RF24 radio(9, 8); // CE, CSN //create an RF24 object
-  const byte address[6] = "00001"; //address through which two modules communicate.
+  RF24 radio(2, 10); // CE, CSN //create an RF24 object
+  const byte slaveAddress[5] = {'R','x','A','A','A'};
   char MenuNumber[14];
   char A;
   char BBB[3];
@@ -75,8 +75,11 @@ void setup() {
     delay(1000);
   //------------------------------------------nRF24L01 Setup
     radio.begin();
-    radio.openWritingPipe(address);//set the address
-    radio.stopListening();//Set module as transmitter
+    radio.setAutoAck(false);
+    radio.setDataRate( RF24_250KBPS );
+    radio.setRetries(3,5); // delay, count
+    radio.openWritingPipe(slaveAddress);
+    radio.stopListening();
     
   //------------------------------------------Button Set Up
     pinMode(ThrottleSweepButtonPin,INPUT);
@@ -262,7 +265,15 @@ void SelectIteratorRefine(){
 }
 
 void SendMenuID(){
-  radio.write(&MenuNumber, sizeof(MenuNumber));
+  bool result;
+  SelectionButtonState = false;
+  while(!SelectionButtonState){
+    SelectionButtonState = digitalRead(SelectionButtonPin);
+    result = radio.write(&MenuNumber, sizeof(MenuNumber));
+    if(result){
+      Serial.println("  Acknowledge received");
+    }
+  }
   delay(1000);
 }
 

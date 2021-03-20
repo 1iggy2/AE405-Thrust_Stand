@@ -18,7 +18,7 @@
   #include <TimeLib.h>
 //------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
-  RF24 radio(9, 8); // CE, CSN //create an RF24 object
+  RF24 radio(4, 5); // CE, CSN //create an RF24 object
   const byte address[6] = "00001"; //address through which two modules communicate.
   char MenuNumber[] = {00000000000000};
   int A = 0;
@@ -40,7 +40,11 @@
 //ESC: MVFT Code Sensor_Package_source.ino
   int ESC_PIN = 0;
   Servo esc;
-  
+
+//Buttons
+  const int SensorOutButtonPin = 6;   //"Button 1"
+  const int CalibrationButtonPin = 7; //"Button 2"
+  const int SettingButtonPin = 8;     //"Button 3"
 //Testing Global Variables
   int Throttle_Start = 0;
   int Throttle_End = 0;
