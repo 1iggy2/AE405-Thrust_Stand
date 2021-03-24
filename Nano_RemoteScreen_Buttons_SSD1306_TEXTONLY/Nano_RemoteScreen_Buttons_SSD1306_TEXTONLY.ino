@@ -20,9 +20,13 @@
   SSD1306_text oled;
   
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
-  RF24 radio(2, 10); // CE, CSN //create an RF24 object
-  const byte address[6] = "00001";
-  char MenuNumber[14];
+  #define CE_PIN   7
+  #define CSN_PIN 10
+  
+  const byte slaveAddress[5] = {'R','x','A','A','A'};
+  RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
+
+  char MenuNumber[17];
   char A;
   char BBB[3];
   char CCC[3];
@@ -30,9 +34,9 @@
   char EEE[3];
   
 //Buttons
-  const int ThrottleSweepButtonPin = 6;     //"Button 1" -> D6
-  const int ConstantThrottleButtonPin = 7;  //"Button 2" -> D7
-  const int StressTestButtonPin = 8;        //"Button 3" -> D8
+  const int ThrottleSweepButtonPin = 2;     //"Button 1" -> D2
+  const int ConstantThrottleButtonPin = 3;  //"Button 2" -> D3
+  const int StressTestButtonPin = 4;        //"Button 3" -> D4
   const int LeftButtonPin = 9;              //"Button 4" -> D9
   const int RightButtonPin = A0;            //"Button 5" -> A0
   const int SelectionButtonPin = A1;        //"Button 6" -> A1
@@ -75,11 +79,9 @@ void setup() {
     delay(1000);
   //------------------------------------------nRF24L01 Setup
     radio.begin();
-    radio.setAutoAck(false);
     radio.setDataRate( RF24_250KBPS );
     radio.setRetries(3,5); // delay, count
-    radio.openWritingPipe(address);
-    radio.stopListening();
+    radio.openWritingPipe(slaveAddress);
     
   //------------------------------------------Button Set Up
     pinMode(ThrottleSweepButtonPin,INPUT);
@@ -265,16 +267,17 @@ void SelectIteratorRefine(){
 }
 
 void SendMenuID(){
-  bool result;
-  SelectionButtonState = false;
-  while(!SelectionButtonState){
-    SelectionButtonState = digitalRead(SelectionButtonPin);
-    result = radio.write(&MenuNumber, sizeof(MenuNumber));
-    if(result){
-      Serial.println("  Acknowledge received");
+  for(int i = 0; i < 11; i++){
+    bool rslt = false;
+    while(!rslt){
+      rslt = radio.write( &MenuNumber, sizeof(MenuNumber) );
+      Serial.println("Attempting to Send");
+      delay(1000);
     }
+    Serial.print("  Data Sent ");
+    Serial.println(MenuNumber);
   }
-  delay(1000);
+  Serial.println("Exit For");
 }
 
 void GatherMenuID(){
@@ -309,19 +312,23 @@ void GatherMenuID(){
   Serial.println("EEE Saved As:");
   Serial.println(EEE);
   MenuNumber[0] = A;
-  MenuNumber[1] = BBB[0];
-  MenuNumber[2] = BBB[1];
-  MenuNumber[3] = BBB[2];
-  MenuNumber[4] = CCC[0];
-  MenuNumber[5] = CCC[1];
-  MenuNumber[6] = CCC[2];
-  MenuNumber[7] = DDD[0];
-  MenuNumber[8] = DDD[1];
-  MenuNumber[9] = DDD[2];
-  MenuNumber[10] = EEE[0];
-  MenuNumber[11] = EEE[1];
-  MenuNumber[12] = EEE[2];
-  MenuNumber[13] = '\0';
+  MenuNumber[1] = ':';
+  MenuNumber[2] = BBB[0];
+  MenuNumber[3] = BBB[1];
+  MenuNumber[4] = BBB[2];
+  MenuNumber[5] = ':';
+  MenuNumber[6] = CCC[0];
+  MenuNumber[7] = CCC[1];
+  MenuNumber[8] = CCC[2];
+  MenuNumber[9] = ':';
+  MenuNumber[10] = DDD[0];
+  MenuNumber[11] = DDD[1];
+  MenuNumber[12] = DDD[2];
+  MenuNumber[13] = ':';
+  MenuNumber[14] = EEE[0];
+  MenuNumber[15] = EEE[1];
+  MenuNumber[16] = EEE[2];
+  MenuNumber[17] = '\0';
 }
 
 void Confirmation(){

@@ -8,17 +8,21 @@
   #include <RF24.h>
 //------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
-  RF24 radio(7, 8); // CE, CSN //create an RF24 object
-  const byte address[6] = "00001";
-  char MenuNumber[14];
+  #define CE_PIN   7
+  #define CSN_PIN 8
+
+  const byte thisSlaveAddress[5] = {'R','x','A','A','A'};
+  RF24 radio(CE_PIN, CSN_PIN);
+
+  char MenuNumber[17];
   bool newData = false;
   
-  int A = 0;
-  int BBB = 000;
-  int CCC = 000;
-  int DDD = 000;
-  int EEE = 000;
-  int F = 0;
+  char A = '0';
+  char BBB[4] = {'0','0','0','\0'};
+  char CCC[4] = {'0','0','0','\0'};
+  char DDD[4] = {'0','0','0','\0'};
+  char EEE[4] = {'0','0','0','\0'};
+  const char Seperator = ':';
 
 //Buttons
   const int SensorOutButtonPin = 9;   //"Button 1"
@@ -34,12 +38,14 @@ void setup() {
   while (!Serial) {
     Serial.begin(9600);
   }
+
   //nRF24L01 Setup
-    radio.begin();
-    radio.setAutoAck(false);
-    radio.setDataRate( RF24_250KBPS );
-    radio.openReadingPipe(0, address);
-    radio.startListening();
+  Serial.println("SimpleRx Starting");
+  radio.begin();
+  radio.setDataRate( RF24_250KBPS );
+  radio.openReadingPipe(1, thisSlaveAddress);
+  radio.startListening();
+
   //Button Setup
     pinMode(SensorOutButtonPin,INPUT);
     pinMode(CalibrationButtonPin,INPUT);
@@ -64,33 +70,32 @@ void loop() {
 
 //------------------------------------------Main Helper Functions
 void RemoteCommunication(){
-  if (radio.available()) {
-    radio.read(&MenuNumber, sizeof(MenuNumber));
-    newData = true;
-    Serial.print("MenuNumber Recieved: ");
-    Serial.println(MenuNumber);
-    newData = false;
-    GroupRemoteMessage();
-    while(A != 0){
-      Serial.println("SUCCESS");
+  if ( radio.available() ) {
+        radio.read( &MenuNumber, sizeof(MenuNumber) );
+        newData = true;
     }
+  if (newData == true) {
+      Serial.print("Data received ");
+      Serial.println(MenuNumber);
+      GroupRemoteMessage();
+      newData = false;
   }
 }
 
 void GroupRemoteMessage(){
-  A = atoi(MenuNumber[0]);
-  BBB = atoi(MenuNumber[1])*100;
-  BBB = BBB + atoi(MenuNumber[2])*10;
-  BBB = BBB + atoi(MenuNumber[3]);
-  CCC = atoi(MenuNumber[4])*100;
-  CCC = CCC + atoi(MenuNumber[5])*10;
-  CCC = CCC + atoi(MenuNumber[6]);
-  DDD = atoi(MenuNumber[7])*100;
-  DDD = DDD + atoi(MenuNumber[8])*10;
-  DDD = DDD + atoi(MenuNumber[9]);
-  EEE = atoi(MenuNumber[10])*100;
-  EEE = EEE + atoi(MenuNumber[11])*10;
-  EEE = EEE + atoi(MenuNumber[12]);
+  A = MenuNumber[0];
+  BBB[0] = MenuNumber[2];
+  BBB[1] = MenuNumber[3];
+  BBB[2] = MenuNumber[4];
+  CCC[0] = MenuNumber[6];
+  CCC[1] = MenuNumber[7];
+  CCC[2] = MenuNumber[8];
+  DDD[0] = MenuNumber[10];
+  DDD[1] = MenuNumber[11];
+  DDD[2] = MenuNumber[12];
+  EEE[0] = MenuNumber[14];
+  EEE[1] = MenuNumber[15];
+  EEE[2] = MenuNumber[16];
   Serial.print("Saved ID = ");
   Serial.print(A);
   Serial.print(" ");
