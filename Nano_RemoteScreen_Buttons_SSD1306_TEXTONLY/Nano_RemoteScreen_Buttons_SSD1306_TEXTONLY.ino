@@ -21,7 +21,7 @@
   
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
   #define CE_PIN   7
-  #define CSN_PIN 10
+  #define CSN_PIN 8
   
   const byte slaveAddress[5] = {'R','x','A','A','A'};
   RF24 radio(CE_PIN, CSN_PIN); // Create a Radio
@@ -58,6 +58,11 @@
 
   char buf[3] = {'0','0','0'};
   const char SelectRange[] = {'0','1','2','3','4','5','6','7','8','9'};
+
+  unsigned long currentMillis;
+  unsigned long prevMillis;
+  unsigned long txIntervalMillis = 1000;
+
   int SelectIterator = 0;
 
   bool Press1 = false;
@@ -267,18 +272,36 @@ void SelectIteratorRefine(){
 }
 
 void SendMenuID(){
-  for(int i = 0; i < 11; i++){
-    bool rslt = false;
-    while(!rslt){
-      rslt = radio.write( &MenuNumber, sizeof(MenuNumber) );
-      Serial.println("Attempting to Send");
-      delay(1000);
-    }
-    Serial.print("  Data Sent ");
-    Serial.println(MenuNumber);
+  SelectionButtonState = false;
+  delay(100);
+  oled.clear();
+  oled.write("Press Select to Cancel Test");
+  while(!SelectionButtonState){
+    SelectionButtonState = digitalRead(SelectionButtonPin);
+    currentMillis = millis();
+      if (currentMillis - prevMillis >= txIntervalMillis) {
+          send();
+          prevMillis = millis();
+      }
   }
-  Serial.println("Exit For");
+  Serial.println("Send Process Complete");
 }
+
+void send() {
+    bool rslt;
+    rslt = radio.write( &MenuNumber, sizeof(MenuNumber) );
+
+    Serial.print("Data Sent ");
+    Serial.print(MenuNumber);
+    if (rslt) {
+        Serial.println("  Acknowledge received");
+    }
+    else {
+        Serial.println("  Tx failed");
+    }
+}
+
+
 
 void GatherMenuID(){
   Serial.println("GatherMenu ID Loop Entered");
