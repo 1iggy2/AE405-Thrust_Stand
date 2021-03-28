@@ -284,7 +284,23 @@ void SendMenuID(){
           prevMillis = millis();
       }
   }
-  Serial.println("Send Process Complete");
+  Serial.println("Sending Abort");
+  SendAbort();
+}
+
+void SendAbort(){
+  MenuNumber[0] = '9';
+  SelectionButtonState = false;
+  oled.clear();
+  oled.write("Infinitely Aborting Test");
+  while(true){    //Hang Remote Sending Abort
+    SelectionButtonState = digitalRead(SelectionButtonPin);
+    currentMillis = millis();
+      if (currentMillis - prevMillis >= txIntervalMillis) {
+          send();
+          prevMillis = millis();
+      }
+  }
 }
 
 void send() {
