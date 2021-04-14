@@ -1,3 +1,5 @@
+#include <Adafruit_BME280.h>
+
 //Pin Setup
   //If confused reference this pinout diagram:
     // https://www.javatpoint.com/arduino-mega-pinout
@@ -18,11 +20,23 @@
     //Pin 3 -> A3
   #define HallPin A3
 
+  //BME 280
+  Adafruit_BME280 bme; //Initialized I2C using default I2C Bus
+    //Vin -> 5V
+    //SCK -> 21 (SCL)
+    //SDI -> 20 (SDA)
+    //GND -> GND
+    
+
 //Variable Setup
   float LCval = 0;
   float Voltval = 0;
   float Currval = 0;
   float Hallval = 0;
+
+  //BME 280
+  float BMEtempFloat = 0;
+  float BMEpressFloat = 0;
 
   float LCval_cal = 0;
   float Voltval_cal = 0;
@@ -45,6 +59,10 @@ void setup() {
   pinMode(VoutPin, INPUT);
   pinMode(HallPin, INPUT);  
 
+  //BME280 Setup
+  unsigned status;
+  status = bme.begin();
+
 }
 
 void loop() {
@@ -52,6 +70,7 @@ void loop() {
   MeasureVolt();
   MeasureCurrent();
   MeasureHall();
+  Measure280();
   DisplayData();
 }
 
@@ -93,12 +112,26 @@ void CalibrateHall(){
   Hallval_cal = Hallcal_factor*Hallval;
 }
 
+void Measure280(){
+  BMEtempFloat = bme.readTemperature();
+  BMEpressFloat = bme.readPressure();
+}
+
 void DisplayData(){
+  //DisplayLC();
+  //DisplayVC();
+  //DisplayHall();
+  DisplayBME();
+  delay(2000);
+}
+void DisplayLC(){
   Serial.println("New Data Measurement");
   Serial.print("Load Cell Raw Output: ");
   Serial.print(LCval);
   Serial.print(" | Load Cell Calibrated Output: ");
   Serial.println(LCval_cal);
+}
+void DisplayVC(){
   Serial.print("Voltage Raw Output: ");
   Serial.print(Voltval);
   Serial.print(" | Voltage Calibrated Output: ");
@@ -107,10 +140,21 @@ void DisplayData(){
   Serial.print(Currval);
   Serial.print(" | Current Calibrated Output: ");
   Serial.println(Currval_cal);
+}
+
+void DisplayHall(){
   Serial.print("Hall Raw Output: ");
   Serial.print(Hallval);
   Serial.print(" | Hall Calibrated Output: ");
   Serial.println(Hallval_cal);
+}
+
+void DisplayBME(){
+  Serial.print("BME Temperature: ");
+  Serial.print(BMEtempFloat);
+  Serial.println(" degrees Centigrade");
+  Serial.print("BME Pressure: ");
+  Serial.print(BMEpressFloat);
+  Serial.println(" Pascals");
   Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-  delay(2000);
 }
