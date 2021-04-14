@@ -1,4 +1,5 @@
 #include <Adafruit_BME280.h>
+#include <SD.h>
 
 //Pin Setup
   //If confused reference this pinout diagram:
@@ -26,8 +27,19 @@
     //SCK -> 21 (SCL)
     //SDI -> 20 (SDA)
     //GND -> GND
-    
 
+  //SD Card Writer
+  #define chipSelect 53
+    //CS -> 53
+    //5V -> 5V
+    //GND -> GND
+    //CLK -> 52
+    //DO -> 50
+    //DI -> 51
+  
+// SD Setup
+    File DataOut;
+    
 //Variable Setup
   float LCval = 0;
   float Voltval = 0;
@@ -62,7 +74,26 @@ void setup() {
   //BME280 Setup
   unsigned status;
   status = bme.begin();
-
+    //Gather Ambient Conditions
+    Measure280();
+    DisplayBME();
+  //SD Setup
+  pinMode(chipSelect,OUTPUT);
+  DataOut = SD.open("Data.txt", FILE_WRITE);
+  if (DataOut){
+    Serial.print("Writing SD Header...");
+    DataOut.println("AE405 Thrust Stand");
+    DataOut.print("Ambient Conditions: [Temperature: ");
+    DataOut.print(BMEtempFloat);
+    DataOut.print(" Celcius] | [Pressure: ");
+    DataOut.print(BMEpressFloat);
+    DataOut.println(" Pascals]");
+    DataOut.println("");
+    DataOut.println("Thrust (N) | Volts | Amps | Torque (n-m)");
+    Serial.println("done.");
+  }else{
+    Serial.println("Error opening data file");
+  }
 }
 
 void loop() {
@@ -70,7 +101,6 @@ void loop() {
   MeasureVolt();
   MeasureCurrent();
   MeasureHall();
-  Measure280();
   DisplayData();
 }
 
@@ -118,10 +148,10 @@ void Measure280(){
 }
 
 void DisplayData(){
-  //DisplayLC();
-  //DisplayVC();
-  //DisplayHall();
-  DisplayBME();
+  Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+  DisplayLC();
+  DisplayVC();
+  DisplayHall();
   delay(2000);
 }
 void DisplayLC(){
@@ -150,6 +180,7 @@ void DisplayHall(){
 }
 
 void DisplayBME(){
+  Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
   Serial.print("BME Temperature: ");
   Serial.print(BMEtempFloat);
   Serial.println(" degrees Centigrade");
@@ -157,4 +188,21 @@ void DisplayBME(){
   Serial.print(BMEpressFloat);
   Serial.println(" Pascals");
   Serial.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
 }
+
+void WriteData(){
+  //Thrust (N) | Volts | Amps | Torque (n-m)
+  DataOut.print(LCval_cal);
+  DataOut.print(",");
+  DataOut.print(Voltval_cal);
+  DataOut.print(",");
+  DataOut.print(Currval_cal);
+  DataOut.print(",");
+  DataOut.print(Hallval_cal);
+  DataOut.println(",");
+}
+
+
+
+
