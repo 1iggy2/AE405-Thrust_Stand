@@ -16,6 +16,10 @@
 //Time based commands
   #include <Time.h>
   #include <TimeLib.h>
+
+//SD Card
+  #include <SD.h>
+
 //------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
   #define CE_PIN   7
@@ -39,19 +43,50 @@
   int EEE = 0;
   const char Seperator = ':';
 
-//BME280
-  #define BME_SCK 13 //Set Pins
-  #define BME_MISO 12
-  #define BME_MOSI 11
-  #define BME_CS 10
-  Adafruit_BME280 bme;
-  int AmbTemp = 0;
-  int AmbPressure = 0;
+//------------------------------------------Sensor Pin Declaration
+//If confused reference this pinout diagram:
+    // https://www.javatpoint.com/arduino-mega-pinout
+  #define LCPin A0      //Wire LC Voltage (O+) wire to pin A0
+  //See Datasheet page 12 for wiring information:
+    // http://www.farnell.com/datasheets/2864809.pdf
+  //NOTE:   V+ goes to 5V
+        //  0+ pin to A0
+        //  COM to Ground
+  #define IoutPin A1    //Wire KR-Sense Iout to pin A1
+  #define VoutPin A2    //Wire KR-Sense Vout to pin A2
+  //NOTE:   Connect "⏚" Pin to Ground    
+
+  //Hall Effect Sensor
+    //SS49E DataSheet: https://www.addicore.com/SS49E-Linear-Hall-Sensor-p/ad316.htm
+    //Pin 1 -> 5V
+    //Pin 2 -> Ground
+    //Pin 3 -> A3
+  #define HallPin A3
+
+  //BME 280
+  Adafruit_BME280 bme; //Initialized I2C using default I2C Bus
+    //Vin -> 5V
+    //SCK -> 21 (SCL)
+    //SDI -> 20 (SDA)
+    //GND -> GND
+
+  //SD Card Writer
+  #define chipSelect 53
+    //CS -> 53
+    //5V -> 5V
+    //GND -> GND
+    //CLK -> 52
+    //DO -> 50
+    //DI -> 51
   
-//ESC: MVFT Code Sensor_Package_source.ino
-  int ESC_PIN = 0;
+// SD Setup
+    File DataOut;
+
+//ESC Setup
+  int ESC_PIN = 7;
   Servo esc;
 
+//------------------------------------------Variable Set Up
 //Buttons
   const int SensorOutButtonPin = 9;   //"Button 1"
   const int CalibrationButtonPin = 10; //"Button 2"
@@ -80,10 +115,36 @@
   bool Torque_Cal = false;
   bool ESC_Cal = false;
   bool VoltAmp_Cal = false;
-  //Temp Data Storage Variables
-  int Voltage;
-  int Amp;
-  int Power;
+
+//Data Storage Variables
+  float LCval = 0;
+  float Voltval = 0;
+  float Currval = 0;
+  float Hallval = 0;
+
+  //BME 280
+  float BMEtempFloat = 0;
+  float BMEpressFloat = 0;
+
+  //Calibrated Values
+  float LCval_cal = 0;
+  float Voltval_cal = 0;
+  float Currval_cal = 0;
+  float Hallval_cal = 0;
+
+  //Human Readable Power Values
+  float Voltage = 0;
+  float Amp = 0;
+  float Power = 0;
+
+  //Calibration Factors
+  float LCcal_factor = 12.5;      //From the datasheet by the 4V range and 50lb capacity
+  float LCoffset = 0.5;           //By the datasheet from the range of 0.5-4.5V
+  float LCmomentArm = 1;
+  float Voltcal_factor = 15.625;  //Takes Vout and converts to source voltage
+  float Currcal_factor = 28.75;   //Takes Iout and converts to source current
+  float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
+
   //Default Settings
   float Warn_Volt = 3.4;
   float Min_Volt = 2.8;
@@ -106,25 +167,55 @@ void setup() {
   radio.openReadingPipe(1, thisSlaveAddress);
   radio.startListening();
     
+  //Sensor Pin Initialization
+  pinMode(LCPin, INPUT);
+  pinMode(IoutPin, INPUT);
+  pinMode(VoutPin, INPUT);
+  pinMode(HallPin, INPUT);  
+
+
   //ESC Setup
-    esc.attach(ESC_PIN);
-    esc.writeMicroseconds(1000);
+  esc.attach(ESC_PIN);
+  esc.writeMicroseconds(1000);
 
   //BME280 Setup
-    unsigned status;
-    status = bme.begin();
-    if (!status) {
-        Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
-        Serial.print("SensorID was: 0x"); Serial.println(bme.sensorID(),16);
-        Serial.print("        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
-        Serial.print("   ID of 0x56-0x58 represents a BMP 280,\n");
-        Serial.print("        ID of 0x60 represents a BME 280.\n");
-        Serial.print("        ID of 0x61 represents a BME 680.\n");
-        //while (1) delay(10);
-    }
-    
+  unsigned status;
+  status = bme.begin();
+  if (!status) {
+    Serial.println("Could not find a valid BME280 sensor, check wiring, address, sensor ID!");
+    Serial.print("SensorID was: 0x"); Serial.println(bme.sensorID(),16);
+    Serial.print("        ID of 0xFF probably means a bad address, a BMP 180 or BMP 085\n");
+    Serial.print("   ID of 0x56-0x58 represents a BMP 280,\n");
+    Serial.print("        ID of 0x60 represents a BME 280.\n");
+    Serial.print("        ID of 0x61 represents a BME 680.\n");
+  }
+
   //Initial Data Gathering
-    AmbientMeasure();
+  AmbientMeasure();
+
+  //SD Setup
+  pinMode(chipSelect,OUTPUT);
+  DataOut = SD.open("Data.txt", FILE_WRITE);
+  if (DataOut){
+    Serial.print("Writing SD Header...");
+    DataOut.println("AE405 Thrust Stand");
+    DataOut.println("-Cameron Gable");
+    DataOut.println("Find Documentation at: https://github.com/1iggy2/AE405-Thrust_Stand");
+    DataOut.println("");
+    DataOut.print("Ambient Conditions: [Temperature: ");
+    DataOut.print(BMEtempFloat);
+    DataOut.print(" Celcius] | [Pressure: ");
+    DataOut.print(BMEpressFloat);
+    DataOut.println(" Pascals]");
+    DataOut.println("");
+    DataOut.println("Thrust (N) | Volts | Amps | Torque (n-m)");
+    Serial.println("done.");
+  }else{
+    Serial.println("Error opening data file");
+  }
+
+    
+  
   
 }
 
@@ -225,8 +316,12 @@ void GroupRemoteMessage(){
 }
 
 void AmbientMeasure(){
-  AmbTemp = bme.readTemperature();
-  AmbPressure = bme.readPressure();
+  Measure280();
+}
+
+void Measure280(){
+  BMEtempFloat = bme.readTemperature();
+  BMEpressFloat = bme.readPressure();
 }
 
 void PostTestReset(){
@@ -395,7 +490,15 @@ void Measure(){
 }
 
 void Save(){
-  
+  //Thrust (N) | Volts | Amps | Torque (n-m)
+  DataOut.print(LCval_cal);
+  DataOut.print(",");
+  DataOut.print(Voltval_cal);
+  DataOut.print(",");
+  DataOut.print(Currval_cal);
+  DataOut.print(",");
+  DataOut.print(Hallval_cal);
+  DataOut.println(",");
 }
 
 void SafetyCheck(){
@@ -410,7 +513,8 @@ void SafetyCheck(){
 }
 
 void SendWarning(){
-  
+  Serial.println("SYSTEM WARNING");
+  //Future work: Install a buzzer
 }
 
 void CheckKillSwitch(){
@@ -424,21 +528,46 @@ void CheckKillSwitch(){
 
 //------------------------------------------Measurement Helper Functions
 void Thrust_Measurement(){
-  
+  LCval = analogRead(LCPin);
+  CalibrateLC();
+}
+
+void CalibrateLC(){
+  LCval_cal = LCcal_factor * (LCval-LCoffset) * LCmomentArm;
 }
 
 void Torque_Measurement(){
-  
+  Hallval = analogRead(HallPin);
+  CalibrateHall();
+}
+
+void CalibrateHall(){
+  Hallval_cal = Hallcal_factor*Hallval;
 }
 
 void RPM_Measurement(){
-  
+  //Needs to be implemented
 }
 
 void VoltCurrent_Measurement(){
-  
+  Voltval = analogRead(VoutPin);
+  CalibrateVolt();
+  Currval = analogRead(IoutPin);
+  CalibrateCurrent();
+  Voltage = Voltval_cal;
+  Amp = Currval_cal;
+  Power = Voltage*Amp;
+}
+
+void CalibrateVolt(){
+  //Calibration function from datasheet
+  Voltval_cal = Voltcal_factor*Voltval;
+}
+
+void CalibrateCurrent(){
+  Currval_cal = Currcal_factor*Currval;
 }
 
 void Airspeed_Measurement(){
-  
+  //Future Work: Implement
 }
