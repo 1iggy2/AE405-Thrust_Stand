@@ -31,7 +31,6 @@
   char MenuNumber[17];
   bool newData = false;
   
-  /*
   char charA[2] = {'0','\0'};
   char charBBB[4] = {'0','0','0','\0'};
   char charCCC[4] = {'0','0','0','\0'};
@@ -43,19 +42,6 @@
   int DDD = 0;
   int EEE = 0;
   const char Seperator = ':';
-  */
-
-  char charA = '0';
-  char charBBB[4] = {'0','0','0','\0'};
-  char charCCC[4] = {'0','0','0','\0'};
-  char charDDD[4] = {'0','0','0','\0'};
-  char charEEE[4] = {'0','0','0','\0'};
-  const char Seperator = ':';
-  int A = 0;
-  int BBB = 0;
-  int CCC = 0;
-  int DDD = 0;
-  int EEE = 0;
 
 //------------------------------------------Sensor Pin Declaration
 //If confused reference this pinout diagram:
@@ -276,9 +262,12 @@ void loop() {
 
 //------------------------------------------Main Helper Functions
 void RemoteCommunication(){
+  Serial.println("Trying to read data ");
   if ( radio.available() ) {
         radio.read( &MenuNumber, sizeof(MenuNumber) );
         newData = true;
+    } else {
+      Serial.println("Read Failure");
     }
   if (newData == true) {
       Serial.print("Data received ");
@@ -288,7 +277,7 @@ void RemoteCommunication(){
   }
 }
 
-/*
+
 void GroupRemoteMessage(){
   charA[0] = MenuNumber[0];
   charBBB[0] = MenuNumber[2];
@@ -328,33 +317,6 @@ void GroupRemoteMessage(){
   Serial.print(DDD);
   Serial.print(" ");
   Serial.println(EEE);
-}
-*/
-
-void GroupRemoteMessage(){
-  charA = MenuNumber[0];
-  charBBB[0] = MenuNumber[2];
-  charBBB[1] = MenuNumber[3];
-  charBBB[2] = MenuNumber[4];
-  charCCC[0] = MenuNumber[6];
-  charCCC[1] = MenuNumber[7];
-  charCCC[2] = MenuNumber[8];
-  charDDD[0] = MenuNumber[10];
-  charDDD[1] = MenuNumber[11];
-  charDDD[2] = MenuNumber[12];
-  charEEE[0] = MenuNumber[14];
-  charEEE[1] = MenuNumber[15];
-  charEEE[2] = MenuNumber[16];
-  Serial.print("Saved ID = ");
-  Serial.print(charA);
-  Serial.print(" ");
-  Serial.print(charBBB);
-  Serial.print(" ");
-  Serial.print(charCCC);
-  Serial.print(" ");
-  Serial.print(charDDD);
-  Serial.print(" ");
-  Serial.println(charEEE);
 }
 
 void AmbientMeasure(){
