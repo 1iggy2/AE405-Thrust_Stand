@@ -236,7 +236,6 @@ void setup() {
 void loop() {
   if (A == 0){              //Gather Remote Data
     RemoteCommunication();
-    GroupRemoteMessage();
     CheckButtonStatus();
   }else if(A == 1){         //Throttle Sweep
     Throttle_Start = 1000+10*BBB;
@@ -284,6 +283,7 @@ void RemoteCommunication(){
   if (newData == true) {
       Serial.print("Data received ");
       Serial.println(MenuNumber);
+      GroupRemoteMessage();      
       newData = false;
   }
 }
@@ -346,15 +346,15 @@ void GroupRemoteMessage(){
   charEEE[1] = MenuNumber[15];
   charEEE[2] = MenuNumber[16];
   Serial.print("Saved ID = ");
-  Serial.print(A);
+  Serial.print(charA);
   Serial.print(" ");
-  Serial.print(BBB);
+  Serial.print(charBBB);
   Serial.print(" ");
-  Serial.print(CCC);
+  Serial.print(charCCC);
   Serial.print(" ");
-  Serial.print(DDD);
+  Serial.print(charDDD);
   Serial.print(" ");
-  Serial.println(EEE);
+  Serial.println(charEEE);
 }
 
 void AmbientMeasure(){
