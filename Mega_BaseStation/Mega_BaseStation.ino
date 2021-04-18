@@ -18,7 +18,7 @@
   #include <TimeLib.h>
 
 //SD Card
-  //#include <SD.h>
+  #include <SD.h>
 
 //------------------------------------------Global Set Up
 //nRF24L01: https://lastminuteengineers.com/nrf24l01-arduino-wireless-communication/
@@ -80,7 +80,7 @@
     //DI -> 51
   
 // SD Setup
-    //File DataOut;
+    File DataOut;
 
 //ESC Setup
   int ESC_PIN = 7;
@@ -195,7 +195,6 @@ void setup() {
 
   //SD Setup
   pinMode(chipSelect,OUTPUT);
-  /*
   DataOut = SD.open("Data.txt", FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
@@ -214,7 +213,6 @@ void setup() {
   }else{
     Serial.println("Error opening data file");
   }
-*/
     
   
   
@@ -491,12 +489,11 @@ void Measure(){
   RPM_Measurement();
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
-  //Save();
+  Save();
 }
 
 void Save(){
   //Thrust (N) | Volts | Amps | Torque (n-m)
-  /*
   DataOut.print(LCval_cal);
   DataOut.print(",");
   DataOut.print(Voltval_cal);
@@ -505,7 +502,6 @@ void Save(){
   DataOut.print(",");
   DataOut.print(Hallval_cal);
   DataOut.println(",");
-  */
 }
 
 void SafetyCheck(){
