@@ -174,9 +174,9 @@ void setup() {
   pinMode(HallPin, INPUT);  
 
 
-  //ESC Setup
-  esc.attach(ESC_PIN);
-  esc.writeMicroseconds(1000);
+  //ESC Setup -- THIS BREAKS EVERYTHING
+  //esc.attach(ESC_PIN);
+  //esc.writeMicroseconds(1000);
 
   //BME280 Setup
   unsigned status;
