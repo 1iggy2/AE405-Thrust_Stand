@@ -83,7 +83,7 @@
     File DataOut;
 
 //ESC Setup
-  int ESC_PIN = 7;
+  int ESC_PIN = 6;
   Servo esc;
 
 //------------------------------------------Variable Set Up
