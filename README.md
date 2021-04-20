@@ -46,7 +46,8 @@ Table of Contents
 
 ### Safety Considerations
 
-Be careful when near spinning and/or powered propellers they can and will maim you. Please remove all propellers while working on the thrust stand. Propellers of all sizes are dangerous and deserve your respect. Please use the remote to remain clear of the spinning blades of death, and ensure you have a way to break the physical circuit from a distance readily availible. 
+Be careful when near spinning and/or powered propellers they can and will maim you. Please remove all propellers while working on the thrust stand. Propellers of all sizes are dangerous and deserve your respect. Please use the remote to remain clear of the spinning blades of death, and ensure you have a way to break the physical circuit from a distance.
+
 [![](http://img.youtube.com/vi/q4shbLB9U7Q/0.jpg)](http://www.youtube.com/watch?v=q4shbLB9U7Q "")
 
 ### How to Use the Remote
