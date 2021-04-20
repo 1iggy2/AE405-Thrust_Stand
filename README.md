@@ -15,12 +15,18 @@ AERO 495. This test stand will use sensors to measure thrust, torque, voltage, c
 and involve a processing system for automated data collection for simple export to software like
 Excel or MatLab for analysis.
 
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/Poster.png?raw=true">
+</p>
+
 Table of Contents
 =================
 
 <!--ts-->
-   * [Table of Contents](#table-of-contents)
    * [Instruction Manual](#instruction-manual)
+      * [Safety Considerations](#safety-considerations)
+      * [How to Use the Remote](#how-to-use-the-remote)
+      * [How to Use the Base Station](#how-to-use-the-base-station)
    * [Construction Guide](#construction-guide)
       * [Wiring](#wiring)
         * [Remote](#remote)
@@ -45,36 +51,64 @@ Be careful when near spinning and/or powered propellers they can and will maim y
 
 ### How to Use the Remote
 
+The remote connects to the base station using an nRF24L01 radio transciever. When powering on the remote from a computer or USB power supply you will be prompted to select a test to perform. The test selection buttons are on the left hand side of the remote and ordered as seen below:
+* TS - Throttle Sweep
+* CT - Constant Throttle
+* ST - Stress Test
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/CaseFront.PNG?raw=true">
+</p>
+You then will use the ← (left), → (right), and ⌂ (select) buttons to enter your chosen testing parameters. These parameters are:
+  
+| Parameter |     Description    |  Throttle Sweep |    Constant Throttle    |     Stress Test     |
+|:---------:|:------------------:|:---------------:|:-----------------------:|:-------------------:|
+|     A     |      Test Type     |        1        |            2            |          3          |
+|    BBB    |  Primary Throttle  | Bottom of Sweep | Constant Throttle Value | High Throttle Value |
+|    CCC    | Secondary Throttle |   Top of Sweep  |           N/A           |  Low Throttle Value |
+|    DDD    |      Test Time     | Total Test Time |     Total Test Time     |   Total Test Time   |
+|    EEE    |      Step Time     |    Step Time    |           N/A           |    Switching Time   |
 
+Before clicking to confirm your test selection and start your test you will be presented these values as a final check before sending the data to the base station. This will appear in the form:
+
+* A:BBB:CCC:DDD:EEE
+
+After the data is sent to the base station and the test begins simply click the ⌂ (select) button to send a cancel signal to the base station. In case of communication failure it is always important to have a safe method to physically break the circuit in the case of a catastrophic testing failure. 
+
+### How to Use the Base Station
+
+The base station is a rather hands off piece of equipment. You should not be interacting with it during testing, only monitoring. You may want to set your own safety parameters or recalibrate the test stand. In that case I recommend modifying the parameters in the base station file: [Mega_BaseStation.ino](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Mega_BaseStation/Mega_BaseStation.ino) If you do this please submit your calibration to this Github page for posterity. To gather data you will need to insert a FAT32 or FAT16 formatted microSD card into the [Adafruit MicroSD card breakout board+](https://www.adafruit.com/product/254) for the data to be recorded. The data will be recorded to the microSD card in the format shown below. 
+
+| AERO 405 Thrust Stand |                       Winter 2021                      |         |             | Cameron Gable |
+|:---------------------:|:------------------------------------------------------:|:-------:|:-----------:|:-------------:|
+| Find Documentation at:| [Github](https://github.com/1iggy2/AE405-Thrust_Stand) |         |             |               |
+|                       |                                                        |         |             |               |
+|  Ambient Conditions:  |                                                        |         |             |               |
+|      Temperature:     |                          VALUE                         | Celsius |             |               |
+|       Pressure:       |                          VALUE                         | Pascals |             |               |
+|                       |                                                        |         |             |               |
+|       Thrust(N)       |                          Volts                         |   Amps  | Torque(n-m) |      RPM      |
+|         VALUE         |                          VALUE                         |  VALUE  |    VALUE    |     VALUE     |
+
+At this time analysis software is not being developed. It is an important feature to this project, and the relevant issue can be found [here.](https://github.com/1iggy2/AE405-Thrust_Stand/issues/9)
 
 ## Construction Guide
 
 ### Wiring
 
-The wiring and wiring diagram were constructed using the website <https://Circuito.io>, an excellent tool for circuit design. A link to the Remote Circuito project can be found [here](https://www.circuito.io/static/reply/index.html?solutionId=6052555829fa400030165b44&solutionPath=storage.circuito.io) and the Base Station Circuito project [here](https://www.circuito.io/static/reply/index.html?solutionId=605298ebe53fd30030c5ce1c&solutionPath=storage.circuito.io). 
 #### Remote
-
+The wiring diagram for the remote has been completed in EAGLE. Completed PCB design Gerber files can be found [here.](https://github.com/1iggy2/AE405-Thrust_Stand/tree/main/CAD/RemotePCB) The connections on the diagram below are accurate for anyone who prefers to manufacture it on perf board. (Assembling via a PCB is certainly easier though).
 
 <p align="center">
-  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/RemoteCircuitoDiagram.PNG?raw=true">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/RemoteEagleCircuit.png?raw=true">
 </p>
-
-| nRF24L01 | OLED  |
-|:--------:|:-----:|
-| ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/nRF24L01%20Connections.PNG)    | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/AdafruitOLEDCircuitoDiagram.PNG) <br><br><br> *N.B. Not the same as the one code written for* |
 
 #### Base Station
-
+The wiring diagram for the base station was also completed in EAGLE. However, a PCB has not yet been designed and remains an [issue](https://github.com/1iggy2/AE405-Thrust_Stand/issues/3) for future work.
 
 <p align="center">
-  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/BaseStationCircuitoDiagram.PNG?raw=true">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/BaseStationEagleCircuit.png?raw=true">
 </p>
-
-| BME280 | Hall Effect Sensor | Infrared Sensor | nRF24L01 | SD Card Shield |
-|--------|--------------------|-----------------|----------|----------------|
-| ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/BME280Connections.PNG)  | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/HallConnections.PNG)              | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/IRConnections.PNG)           | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/nRF24L01%20Connections_MEGA.PNG)    | ![](https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/SDConnections.PNG)          |
-
-*N.B. Not all components were availible on Circuito.io, additional components connections labeled in seperate diagram (Not yet created)
+Please note in the EAGLE image above the pin locations are not accurate on the Arduino Mega, instead the nets have been named [PIN-PURPOSE].
 
 ### Thrust Stand
 
@@ -172,8 +206,10 @@ Plotted into a graph:
 
 With this information we are designing a 3D printed airfoil to slot into the 8020 aluminium extrusion. We will also be putting our structure, shrouded with an aerodynamic
 fairing, into the wind tunnel and testing the amount of drag that the system generates with the
-goal of minimizing this effect. This will be to validate our simulations. Our current design for the airfoil fairing is show here.
+goal of minimizing this effect. This will be to validate our simulations. 
+
+We chose to use a NACA 0015 airfoil fairing for the vertical arm of the stand.
 
 <p align="center">
-  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/AerofairingCrossSection.png?raw=true">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/Fairing.PNG?raw=true">
 </p>
