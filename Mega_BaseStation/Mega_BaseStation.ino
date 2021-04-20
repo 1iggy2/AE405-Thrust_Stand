@@ -42,6 +42,7 @@
   int DDD = 0;
   int EEE = 0;
   const char Seperator = ':';
+  
 
 //------------------------------------------Sensor Pin Declaration
 //If confused reference this pinout diagram:
