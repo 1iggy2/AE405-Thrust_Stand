@@ -20,6 +20,7 @@ Table of Contents
 
 <!--ts-->
    * [Table of Contents](#table-of-contents)
+   * [Instruction Manual](#instruction-manual)
    * [Construction Guide](#construction-guide)
       * [Wiring](#wiring)
         * [Remote](#remote)
@@ -32,6 +33,17 @@ Table of Contents
       * [Physical Structure Analysis and Testing](physical-structure-analysis-and-testing)
         * [Thrust Stand Simulation](thrust-stand-simulation)
 <!--te-->
+
+
+
+## Instruction Manual
+
+### Safety Considerations
+
+Be careful when near spinning and/or powered propellers they can and will maim you. Please remove all propellers while working on the thrust stand. Propellers of all sizes are dangerous and deserve your respect. Please use the remote to remain clear of the spinning blades of death, and ensure you have a way to break the physical circuit from a distance readily availible. 
+[![](http://img.youtube.com/vi/q4shbLB9U7Q/0.jpg)](http://www.youtube.com/watch?v=q4shbLB9U7Q "")
+
+### How to Use the Remote
 
 
 
