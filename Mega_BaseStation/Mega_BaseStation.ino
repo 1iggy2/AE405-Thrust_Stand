@@ -63,6 +63,9 @@
     //Pin 3 -> A3
   #define HallPin A3
 
+  //Tach
+  #define RPMPin 2
+
   //BME 280
   Adafruit_BME280 bme; //Initialized I2C using default I2C Bus
     //Vin -> 5V
@@ -102,7 +105,7 @@
   int Step_Time = 0;
   int Throttle_High = 0;
   int Throttle_Low = 0;
-  int Test_Time = 0;
+  float Test_Time = 0;
   unsigned long currentMillis; //Timing Vars
   unsigned long currentMillis2;
   unsigned long prevMillis;
@@ -116,11 +119,18 @@
   bool ESC_Cal = false;
   bool VoltAmp_Cal = false;
 
+  //RPM Test Variables
+  int RPMread1 = 0;
+  int RPMread2 = 0;
+  unsigned long RPMfirst;
+  unsigned long RPMsecond;
+
 //Data Storage Variables
   float LCval = 0;
   float Voltval = 0;
   float Currval = 0;
   float Hallval = 0;
+  unsigned long RPMval = 0;
 
   //BME 280
   float BMEtempFloat = 0;
@@ -131,6 +141,7 @@
   float Voltval_cal = 0;
   float Currval_cal = 0;
   float Hallval_cal = 0;
+  float RPMval_cal = 0;
 
   //Human Readable Power Values
   float Voltage = 0;
@@ -144,6 +155,7 @@
   float Voltcal_factor = 15.625;  //Takes Vout and converts to source voltage
   float Currcal_factor = 28.75;   //Takes Iout and converts to source current
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
+  float RPMcal_factor = 60000;    //MS per Minute
 
   //Default Settings
   float Warn_Volt = 3.4;
@@ -172,6 +184,7 @@ void setup() {
   pinMode(IoutPin, INPUT);
   pinMode(VoutPin, INPUT);
   pinMode(HallPin, INPUT);  
+  pinMode(RPMPin, INPUT);
 
 
   //ESC Setup -- THIS BREAKS EVERYTHING
@@ -493,7 +506,7 @@ void Measure(){
 }
 
 void Save(){
-  //Thrust (N) | Volts | Amps | Torque (n-m)
+  //Thrust (N) | Volts | Amps | Torque (n-m) | RPM
   DataOut.print(LCval_cal);
   DataOut.print(",");
   DataOut.print(Voltval_cal);
@@ -501,6 +514,8 @@ void Save(){
   DataOut.print(Currval_cal);
   DataOut.print(",");
   DataOut.print(Hallval_cal);
+  DataOut.print(",");
+  DataOut.print(RPMval_cal);
   DataOut.println(",");
 }
 
@@ -549,7 +564,27 @@ void CalibrateHall(){
 }
 
 void RPM_Measurement(){
-  //Needs to be implemented
+  while(RPMread1 == 0){
+    RPMread1 = digitalRead(RPMPin);
+  }
+
+  RPMfirst = millis();
+  
+  while(RPMread2 == 0){
+    RPMread2 = digitalRead(RPMPin);
+  }
+  RPMsecond = millis();
+
+  RPMval = RPMsecond-RPMfirst; //Milliseconds per rotation
+
+  //Reset state storage variables
+  RPMread1 = 0;
+  RPMread2 = 0;
+  CalibrateRPM();
+}
+
+void CalibrateRPM(){
+  RPMval_cal = RPMcal_factor/RPMval; //RP(Ms)->RPM
 }
 
 void VoltCurrent_Measurement(){
