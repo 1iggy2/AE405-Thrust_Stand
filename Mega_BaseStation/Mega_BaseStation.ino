@@ -211,17 +211,18 @@ void setup() {
   DataOut = SD.open("Data.txt", FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
-    DataOut.println("AE405 Thrust Stand");
-    DataOut.println("-Cameron Gable");
-    DataOut.println("Find Documentation at: https://github.com/1iggy2/AE405-Thrust_Stand");
+    DataOut.println("AE405 Thrust Stand,Winter 2021,,,Cameron Gable");
+    DataOut.println("Find Documentation at:, https://github.com/1iggy2/AE405-Thrust_Stand");
     DataOut.println("");
-    DataOut.print("Ambient Conditions: [Temperature: ");
+    DataOut.println("Ambient Conditions:");
+    DataOut.print("Temperature:,");
     DataOut.print(BMEtempFloat);
-    DataOut.print(" Celcius] | [Pressure: ");
+    DataOut.print(", Celsius");
+    DataOut.println("Pressure:,");
     DataOut.print(BMEpressFloat);
-    DataOut.println(" Pascals]");
+    DataOut.println(" Pascals");
     DataOut.println("");
-    DataOut.println("Thrust (N) | Volts | Amps | Torque (n-m)");
+    DataOut.println("Thrust (N),Volts,Amps,Torque (n-m),RPM");
     Serial.println("done.");
   }else{
     Serial.println("Error opening data file");
