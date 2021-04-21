@@ -380,6 +380,8 @@ void ThrottleSweep(){
   Throttle = Throttle_Start;
   while(Throttle < Throttle_End){
     Serial.println("Throttle Sweep Main");
+    Serial.print("Throttle Setting: ");
+    Serial.println(Throttle);
     esc.writeMicroseconds(Throttle);
     currentMillis = millis();
     prevMillis = millis();
@@ -507,7 +509,7 @@ void Measure(){
   SafetyCheck();
   Thrust_Measurement();
   Torque_Measurement();
-  RPM_Measurement();
+  //RPM_Measurement();
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
   Save();
@@ -523,9 +525,9 @@ void Save(){
   DataOut.print(Currval_cal);
   DataOut.print(",");
   DataOut.print(Hallval_cal);
-  DataOut.print(",");
-  DataOut.print(RPMval_cal);
   DataOut.println(",");
+  //DataOut.print(RPMval_cal);
+  //DataOut.println(",");
 }
 
 void SafetyCheck(){
@@ -580,12 +582,14 @@ void RPM_Measurement(){
   Serial.println("RPM Start");
   while(RPMread1 == 0){
     RPMread1 = digitalRead(RPMPin);
+    Serial.println("RPMLoop1");
   }
 
   RPMfirst = millis();
   
   while(RPMread2 == 0){
     RPMread2 = digitalRead(RPMPin);
+    Serial.println("RPMLoop2");
   }
   RPMsecond = millis();
 
