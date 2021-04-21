@@ -59,6 +59,9 @@ The remote connects to the base station using an nRF24L01 radio transciever. Whe
 <p align="center">
   <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/CaseFront.PNG?raw=true">
 </p>
+<p align="center">
+  <img src="https://github.com/1iggy2/AE405-Thrust_Stand/blob/main/Images/RemoteAssembledPCB.jpg?raw=true">
+</p>
 You then will use the ← (left), → (right), and ⌂ (select) buttons to enter your chosen testing parameters. These parameters are:
   
 | Parameter |     Description    |  Throttle Sweep |    Constant Throttle    |     Stress Test     |
