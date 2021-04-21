@@ -517,7 +517,9 @@ void Measure(){
   //RPM_Measurement();
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
-  Save();
+  
+  //Save();
+  SerialSave();
 }
 
 void Save(){
@@ -531,6 +533,20 @@ void Save(){
   DataOut.print(",");
   DataOut.print(Hallval_cal);
   DataOut.println(",");
+  //DataOut.print(RPMval_cal);
+  //DataOut.println(",");
+}
+
+void SerialSave(){ 
+  //Thrust (N) | Volts | Amps | Torque (n-m) | RPM
+  Serial.print(LCval_cal);
+  Serial.print(",");
+  Serial.print(Voltval_cal);
+  Serial.print(",");
+  Serial.print(Currval_cal);
+  Serial.print(",");
+  Serial.print(Hallval_cal);
+  Serial.println(",");
   //DataOut.print(RPMval_cal);
   //DataOut.println(",");
 }
