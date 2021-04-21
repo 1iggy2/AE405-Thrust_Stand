@@ -275,16 +275,16 @@ void loop() {
 
 //------------------------------------------Main Helper Functions
 void RemoteCommunication(){
-  Serial.println("Trying to read data ");
+  //Serial.println("Trying to read data ");
   if ( radio.available() ) {
         radio.read( &MenuNumber, sizeof(MenuNumber) );
         newData = true;
     } else {
-      Serial.println("Read Failure");
+      //Serial.println("Read Failure");
     }
   if (newData == true) {
-      Serial.print("Data received ");
-      Serial.println(MenuNumber);
+      //Serial.print("Data received ");
+      //Serial.println(MenuNumber);
       GroupRemoteMessage();      
       newData = false;
   }
@@ -305,31 +305,31 @@ void GroupRemoteMessage(){
   charEEE[0] = MenuNumber[14];
   charEEE[1] = MenuNumber[15];
   charEEE[2] = MenuNumber[16];
-  Serial.print("Saved ID = ");
-  Serial.print(charA);
-  Serial.print(" ");
-  Serial.print(charBBB);
-  Serial.print(" ");
-  Serial.print(charCCC);
-  Serial.print(" ");
-  Serial.print(charDDD);
-  Serial.print(" ");
-  Serial.println(charEEE);
+  //Serial.print("Saved ID = ");
+  //Serial.print(charA);
+  //Serial.print(" ");
+  //Serial.print(charBBB);
+  //Serial.print(" ");
+  //Serial.print(charCCC);
+  //Serial.print(" ");
+  //Serial.print(charDDD);
+  //Serial.print(" ");
+  //Serial.println(charEEE);
   A = atoi(charA);
   BBB = atoi(charBBB);
   CCC = atoi(charCCC);
   DDD = atoi(charDDD);
   EEE = atoi(charEEE);
-  Serial.print("Saved Ints = ");
-  Serial.print(A);
-  Serial.print(" ");
-  Serial.print(BBB);
-  Serial.print(" ");
-  Serial.print(CCC);
-  Serial.print(" ");
-  Serial.print(DDD);
-  Serial.print(" ");
-  Serial.println(EEE);
+  //Serial.print("Saved Ints = ");
+  //Serial.print(A);
+  //Serial.print(" ");
+  //Serial.print(BBB);
+  //Serial.print(" ");
+  //Serial.print(CCC);
+  //Serial.print(" ");
+  //Serial.print(DDD);
+  //Serial.print(" ");
+  //Serial.println(EEE);
 }
 
 void AmbientMeasure(){
@@ -379,22 +379,22 @@ void ThrottleSweep(){
   Serial.println(Throttle_Step);
   Throttle = Throttle_Start;
   while(Throttle < Throttle_End){
-    Serial.println("Throttle Sweep Main");
-    Serial.print("Throttle Setting: ");
-    Serial.println(Throttle);
+    //Serial.println("Throttle Sweep Main");
+    //Serial.print("Throttle Setting: ");
+    //Serial.print(Throttle);
     esc.writeMicroseconds(Throttle);
     currentMillis = millis();
-    Serial.print("Current Millis: ");
-    Serial.println(currentMillis);
+    //Serial.print("Current Millis: ");
+    //Serial.println(currentMillis);
     prevMillis = millis();
     while(prevMillis - currentMillis <= Step_Time){
-      Serial.println("Throttle Sweep Subloop");
+      //Serial.println("Throttle Sweep Subloop");
       Measure();
       prevMillis = millis();
-      Serial.print("Prev Millis: ");
-      Serial.println(prevMillis);
+      //Serial.print("Prev Millis: ");
+      //Serial.println(prevMillis);
     }
-    Serial.println("STEP");
+    //Serial.println("STEP");
     Throttle = Throttle + Throttle_Step;
   }
   PostTestReset();
