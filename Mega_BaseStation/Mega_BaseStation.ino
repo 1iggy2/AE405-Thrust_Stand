@@ -347,7 +347,9 @@ void PostTestReset(){
   esc.writeMicroseconds(1000);
   MenuNumber[17];
   A = 0;
-  while(true){}
+  while(true){
+    Serial.println("Testing Complete");
+    }
 }
 
 void CheckButtonStatus(){
@@ -373,6 +375,8 @@ void ButtonInterpretation(){
 void ThrottleSweep(){
   float FloatTS = (Throttle_End-Throttle_Start)/(Test_Time/Step_Time);
   Throttle_Step = (int) FloatTS;
+  Serial.print("Throttle Step Size: ");
+  Serial.println(Throttle_Step);
   Throttle = Throttle_Start;
   while(Throttle < Throttle_End){
     Serial.println("Throttle Sweep Main");
@@ -384,6 +388,7 @@ void ThrottleSweep(){
       Measure();
       prevMillis = millis();
     }
+    Serial.println("STEP");
     Throttle = Throttle + Throttle_Step;
   }
   PostTestReset();
@@ -528,6 +533,7 @@ void SafetyCheck(){
     SendWarning();
   }
   if(Voltage < Min_Volt || Amp > Max_Amp || Power > Max_Power){
+    Serial.println("Ending Test");
     esc.writeMicroseconds(1000);
   }
   RemoteCommunication(); //Checks for remote kill switch
