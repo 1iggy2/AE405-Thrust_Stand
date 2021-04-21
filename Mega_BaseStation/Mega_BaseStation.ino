@@ -577,6 +577,7 @@ void CalibrateHall(){
 }
 
 void RPM_Measurement(){
+  Serial.println("RPM Start");
   while(RPMread1 == 0){
     RPMread1 = digitalRead(RPMPin);
   }
@@ -597,6 +598,7 @@ void RPM_Measurement(){
 }
 
 void CalibrateRPM(){
+  Serial.println("RPM Calibration");
   RPMval_cal = RPMcal_factor/RPMval; //RP(Ms)->RPM
 }
 
@@ -605,8 +607,8 @@ void VoltCurrent_Measurement(){
   CalibrateVolt();
   Currval = analogRead(IoutPin);
   CalibrateCurrent();
-  Voltage = Voltval_cal;
-  Amp = Currval_cal;
+  Voltage = Voltval;
+  Amp = Currval;
   Power = Voltage*Amp;
 }
 
