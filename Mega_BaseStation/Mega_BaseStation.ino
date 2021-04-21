@@ -106,6 +106,8 @@
   int Throttle_High = 0;
   int Throttle_Low = 0;
   float Test_Time = 0;
+  unsigned long TestStartTime;
+  unsigned long CurrentTestTime;
   unsigned long currentMillis; //Timing Vars
   unsigned long currentMillis2;
   unsigned long prevMillis;
@@ -152,7 +154,7 @@
   //Calibration Factors
   float LCcal_factor = 0.058;      //From the datasheet by the 4V range and 50lb capacity
   float LCmomentArm = 2.5;
-  float Voltcal_factor = 15.625/13;  //Takes Vout and converts to source voltage /13 from testing R^2=1
+  float Voltcal_factor = 1/13;  //Takes Vout and converts to source voltage /13 from testing R^2=1
   float Currcal_factor = 28.75;   //Takes Iout and converts to source current
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
   float RPMcal_factor = 60000;    //MS per Minute
@@ -226,7 +228,7 @@ void setup() {
     DataOut.print(BMEpressFloat);
     DataOut.println(" Pascals");
     DataOut.println("");
-    DataOut.println("Thrust (N),Volts,Amps,Torque (in-lb),RPM");
+    DataOut.println("Time (ms),Thrust (N),Volts,Amps,Torque (in-lb)");
     DataOut.close();
     Serial.println("done.");
   }else{
@@ -378,6 +380,7 @@ void ButtonInterpretation(){
 }
 
 void ThrottleSweep(){
+  TestStartTime = millis();
   float FloatTS = (Throttle_End-Throttle_Start)/(Test_Time/Step_Time);
   Throttle_Step = (int) FloatTS;
   Serial.print("Throttle Step Size: ");
@@ -522,7 +525,7 @@ void Measure(){
   //RPM_Measurement();
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
-  
+  CurrentTestTime = millis()-TestStartTime;
   Save();
   //SerialSave();
 }
@@ -530,7 +533,9 @@ void Measure(){
 void Save(){
   Serial.println("Save");  
   DataOut = SD.open("Data.txt", FILE_WRITE);
-  //Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  //Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  DataOut.print(CurrentTestTime);
+  DataOut.print(",");
   DataOut.print(LCval_cal);
   DataOut.print(",");
   DataOut.print(Voltval_cal);
@@ -597,7 +602,7 @@ void Thrust_Measurement(){
 }
 
 void CalibrateLC(){
-  Force_on_LC = LCcal_factor * LCval - 6.88;
+  Force_on_LC = LCcal_factor * LCval - 6.88 + 2.62;
   LCval_cal = Force_on_LC * LCmomentArm;
 }
 
