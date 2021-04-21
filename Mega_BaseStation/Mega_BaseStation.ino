@@ -85,6 +85,7 @@
 // SD Setup
     File DataOut;
     int TestNumber = 0;
+    String TestName = "0_Data.txt";
 
 //ESC Setup
   int ESC_PIN = 6;
@@ -153,10 +154,10 @@
   float Power = 0;
 
   //Calibration Factors
-  float LCcal_factor = 0.058;      //From the datasheet by the 4V range and 50lb capacity
-  float LCmomentArm = 2.5;
-  float Voltcal_factor = 1/13;  //Takes Vout and converts to source voltage /13 from testing R^2=1
-  float Currcal_factor = 28.75;   //Takes Iout and converts to source current
+  float LCcal_factor = .0166;      //From the datasheet by the 4V range and 50lb capacity
+  int LC_tare = 0;
+  float Voltcal_factor = 0.0773;  //Takes Vout and converts to source voltage /13 from testing R^2=1
+  float Currcal_factor = .1335;   //Takes Iout and converts to source current
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
   float RPMcal_factor = 60000;    //MS per Minute
 
@@ -216,11 +217,12 @@ void setup() {
     //while (1);
   }
 
-  while(SD.exists(TestNumber+"_Data.txt")){
+  while(SD.exists(TestName)){
     TestNumber = TestNumber + 1; //Iterate number checked for
+    TestName = TestNumber + "_Data.txt";
   }
 
-  DataOut = SD.open(TestNumber+"_Data.txt", FILE_WRITE);
+  DataOut = SD.open(TestName, FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
     DataOut.println("AE405 Thrust Stand,Winter 2021,,,Cameron Gable");
@@ -234,7 +236,7 @@ void setup() {
     DataOut.print(BMEpressFloat);
     DataOut.println(" Pascals");
     DataOut.println("");
-    DataOut.println("Time (ms),Thrust (N),Volts,Amps,Torque (in-lb)");
+    DataOut.println("Throttle,Time (ms),Thrust (N),Volts,Amps,Torque (in-lb)");
     DataOut.close();
     Serial.println("done.");
   }else{
@@ -392,6 +394,7 @@ void ThrottleSweep(){
   Serial.print("Throttle Step Size: ");
   Serial.println(Throttle_Step);
   Throttle = Throttle_Start;
+  LC_tare = analogRead(LCPin);
   while(Throttle < Throttle_End){
     //Serial.println("Throttle Sweep Main");
     //Serial.print("Throttle Setting: ");
@@ -421,6 +424,7 @@ void ConstantThrottle(){
   Serial.println(Throttle_Start);
   currentMillis = millis();
   prevMillis = millis();
+  LC_tare = analogRead(LCPin);
   while(prevMillis - currentMillis <= Test_Time){
     Measure();
     prevMillis = millis();
@@ -433,6 +437,7 @@ void StressTest(){
   currentMillis2 = millis();
   prevMillis2 = millis();
   Throttle = Throttle_High; //Start on Low Throttle after IF
+  LC_tare = analogRead(LCPin);
   while(prevMillis2-currentMillis2 <= Test_Time){
     if(Throttle == Throttle_Low){
       Serial.println("HIGH");
@@ -540,7 +545,9 @@ void Measure(){
 void Save(){
   Serial.println("Save");  
   DataOut = SD.open("Data.txt", FILE_WRITE);
-  //Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  //Throttle | Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  DataOut.print(Throttle);
+  DataOut.print(",");
   DataOut.print(CurrentTestTime);
   DataOut.print(",");
   DataOut.print(LCval_cal);
@@ -559,7 +566,9 @@ void Save(){
 void SaveRAW(){
   Serial.println("Save");  
   DataOut = SD.open("Data.txt", FILE_WRITE);
-  //Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  //Throttle | Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  DataOut.print(Throttle);
+  DataOut.print(",");
   DataOut.print(CurrentTestTime);
   DataOut.print(",");
   DataOut.print(LCval);
@@ -576,7 +585,11 @@ void SaveRAW(){
 }
 
 void SerialSave(){ 
-  //Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  //Throttle | Time | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  Serial.print(Throttle);
+  Serial.print(",");
+  Serial.print(CurrentTestTime);
+  Serial.print(",");
   Serial.print(LCval_cal);
   Serial.print(",");
   Serial.print(Voltval_cal);
@@ -628,8 +641,8 @@ void Thrust_Measurement(){
 }
 
 void CalibrateLC(){
-  Force_on_LC = LCcal_factor * LCval - 6.88 + 2.62;
-  LCval_cal = Force_on_LC * LCmomentArm;
+  Force_on_LC = LCcal_factor * (LCval-LC_tare);
+  LCval_cal = Force_on_LC;
 }
 
 void Torque_Measurement(){
@@ -638,7 +651,8 @@ void Torque_Measurement(){
 }
 
 void CalibrateHall(){
-  Hallval_cal = -182 + 1.02*Hallval + -0.00205*pow(Hallval,2) +  0.00000144*pow(Hallval,3);
+  Hallval_cal = 26.131 - 0.771*Hallval + 0.00365*pow(Hallval,2) - 0.000006444*pow(Hallval,3) + 0.0000000040224*pow(Hallval,4);
+
 }
 
 void RPM_Measurement(){
@@ -680,7 +694,7 @@ void VoltCurrent_Measurement(){
 
 void CalibrateVolt(){
   //Calibration function from datasheet
-  Voltval_cal = Voltcal_factor*Voltval;
+  Voltval_cal = Voltcal_factor*(Voltval-1);
   Voltage = Voltval_cal;
 }
 
