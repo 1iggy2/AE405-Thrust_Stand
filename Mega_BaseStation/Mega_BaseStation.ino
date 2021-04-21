@@ -74,7 +74,7 @@
     //GND -> GND
 
   //SD Card Writer
-  //#define chipSelect 53
+  #define chipSelect 53
     //CS -> 53
     //5V -> 5V
     //GND -> GND
@@ -207,8 +207,8 @@ void setup() {
   AmbientMeasure();
 
   //SD Setup
-  //pinMode(chipSelect,OUTPUT);
-  if (!SD.begin(4)) {
+  pinMode(chipSelect,OUTPUT);
+  if (!SD.begin(chipSelect)) {
     Serial.println("initialization failed!");
     //while (1);
   }
