@@ -84,6 +84,7 @@
   
 // SD Setup
     File DataOut;
+    int TestNumber = 0;
 
 //ESC Setup
   int ESC_PIN = 6;
@@ -214,7 +215,12 @@ void setup() {
     Serial.println("initialization failed!");
     //while (1);
   }
-  DataOut = SD.open("Data.txt", FILE_WRITE);
+
+  while(SD.exists(TestNumber+"_Data.txt")){
+    TestNumber = TestNumber + 1; //Iterate number checked for
+  }
+
+  DataOut = SD.open(TestNumber+"_Data.txt", FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
     DataOut.println("AE405 Thrust Stand,Winter 2021,,,Cameron Gable");
@@ -528,6 +534,7 @@ void Measure(){
   CurrentTestTime = millis()-TestStartTime;
   Save();
   //SerialSave();
+  //SaveRAW()
 }
 
 void Save(){
@@ -543,6 +550,25 @@ void Save(){
   DataOut.print(Currval_cal);
   DataOut.print(",");
   DataOut.print(Hallval_cal);
+  DataOut.println(",");
+  DataOut.close();
+  //DataOut.print(RPMval_cal);
+  //DataOut.println(",");
+}
+
+void SaveRAW(){
+  Serial.println("Save");  
+  DataOut = SD.open("Data.txt", FILE_WRITE);
+  //Time (ms) | Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
+  DataOut.print(CurrentTestTime);
+  DataOut.print(",");
+  DataOut.print(LCval);
+  DataOut.print(",");
+  DataOut.print(Voltval);
+  DataOut.print(",");
+  DataOut.print(Currval);
+  DataOut.print(",");
+  DataOut.print(Hallval);
   DataOut.println(",");
   DataOut.close();
   //DataOut.print(RPMval_cal);
