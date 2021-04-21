@@ -384,11 +384,15 @@ void ThrottleSweep(){
     Serial.println(Throttle);
     esc.writeMicroseconds(Throttle);
     currentMillis = millis();
+    Serial.print("Current Millis: ");
+    Serial.println(currentMillis);
     prevMillis = millis();
     while(prevMillis - currentMillis <= Step_Time){
       Serial.println("Throttle Sweep Subloop");
       Measure();
       prevMillis = millis();
+      Serial.print("Prev Millis: ");
+      Serial.println(prevMillis);
     }
     Serial.println("STEP");
     Throttle = Throttle + Throttle_Step;
@@ -509,6 +513,7 @@ void Measure(){
   SafetyCheck();
   Thrust_Measurement();
   Torque_Measurement();
+    //Future work implement RPM successfully
   //RPM_Measurement();
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
@@ -536,7 +541,8 @@ void SafetyCheck(){
   }
   if(Voltage < Min_Volt || Amp > Max_Amp || Power > Max_Power){
     Serial.println("Ending Test");
-    esc.writeMicroseconds(1000);
+    //Uncomment when the voltage is working
+    //esc.writeMicroseconds(1000);
   }
   RemoteCommunication(); //Checks for remote kill switch
   CheckKillSwitch();
