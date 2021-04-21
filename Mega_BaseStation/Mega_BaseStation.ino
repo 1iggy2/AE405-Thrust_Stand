@@ -375,10 +375,12 @@ void ThrottleSweep(){
   Throttle_Step = (int) FloatTS;
   Throttle = Throttle_Start;
   while(Throttle < Throttle_End){
+    Serial.println("Throttle Sweep Main");
     esc.writeMicroseconds(Throttle);
     currentMillis = millis();
     prevMillis = millis();
     while(prevMillis - currentMillis <= Step_Time){
+      Serial.println("Throttle Sweep Subloop");
       Measure();
       prevMillis = millis();
     }
@@ -507,6 +509,7 @@ void Measure(){
 }
 
 void Save(){
+  Serial.println("Save");  
   //Thrust (N) | Volts | Amps | Torque (n-m) | RPM
   DataOut.print(LCval_cal);
   DataOut.print(",");
@@ -533,6 +536,9 @@ void SafetyCheck(){
 
 void SendWarning(){
   Serial.println("SYSTEM WARNING");
+  Serial.print("Voltage: ");
+  Serial.print(Voltage);
+  Serial.println(" volts");
   //Future work: Install a buzzer
 }
 
