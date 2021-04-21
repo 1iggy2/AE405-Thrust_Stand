@@ -74,7 +74,7 @@
     //GND -> GND
 
   //SD Card Writer
-  #define chipSelect 53
+  //#define chipSelect 53
     //CS -> 53
     //5V -> 5V
     //GND -> GND
@@ -207,7 +207,11 @@ void setup() {
   AmbientMeasure();
 
   //SD Setup
-  pinMode(chipSelect,OUTPUT);
+  //pinMode(chipSelect,OUTPUT);
+  if (!SD.begin(4)) {
+    Serial.println("initialization failed!");
+    //while (1);
+  }
   DataOut = SD.open("Data.txt", FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
@@ -223,6 +227,7 @@ void setup() {
     DataOut.println(" Pascals");
     DataOut.println("");
     DataOut.println("Thrust (N),Volts,Amps,Torque (in-lb),RPM");
+    DataOut.close();
     Serial.println("done.");
   }else{
     Serial.println("Error opening data file");
@@ -518,12 +523,13 @@ void Measure(){
   VoltCurrent_Measurement();
   //Airspeed_Measurement(); //May not be included
   
-  //Save();
-  SerialSave();
+  Save();
+  //SerialSave();
 }
 
 void Save(){
   Serial.println("Save");  
+  DataOut = SD.open("Data.txt", FILE_WRITE);
   //Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
   DataOut.print(LCval_cal);
   DataOut.print(",");
@@ -533,6 +539,7 @@ void Save(){
   DataOut.print(",");
   DataOut.print(Hallval_cal);
   DataOut.println(",");
+  DataOut.close();
   //DataOut.print(RPMval_cal);
   //DataOut.println(",");
 }
