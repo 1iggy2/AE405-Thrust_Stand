@@ -348,7 +348,7 @@ void PostTestReset(){
   MenuNumber[17];
   A = 0;
   while(true){
-    Serial.println("Testing Complete");
+    //Serial.println("Testing Complete");
     }
 }
 
@@ -556,7 +556,7 @@ void SafetyCheck(){
     SendWarning();
   }
   if(Voltage < Min_Volt || Amp > Max_Amp || Power > Max_Power){
-    Serial.println("Ending Test");
+    //Serial.println("Ending Test");
     //Uncomment when the voltage is working
     //esc.writeMicroseconds(1000);
   }
