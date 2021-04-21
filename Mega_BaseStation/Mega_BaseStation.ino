@@ -137,6 +137,7 @@
   float BMEpressFloat = 0;
 
   //Calibrated Values
+  float Force_on_LC = 0; //Value LC sees without moment arm considerations
   float LCval_cal = 0;
   float Voltval_cal = 0;
   float Currval_cal = 0;
@@ -149,10 +150,9 @@
   float Power = 0;
 
   //Calibration Factors
-  float LCcal_factor = 12.5;      //From the datasheet by the 4V range and 50lb capacity
-  float LCoffset = 0.5;           //By the datasheet from the range of 0.5-4.5V
-  float LCmomentArm = 1;
-  float Voltcal_factor = 15.625;  //Takes Vout and converts to source voltage
+  float LCcal_factor = 0.058;      //From the datasheet by the 4V range and 50lb capacity
+  float LCmomentArm = 2.5;
+  float Voltcal_factor = 15.625/13;  //Takes Vout and converts to source voltage /13 from testing R^2=1
   float Currcal_factor = 28.75;   //Takes Iout and converts to source current
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
   float RPMcal_factor = 60000;    //MS per Minute
@@ -222,7 +222,7 @@ void setup() {
     DataOut.print(BMEpressFloat);
     DataOut.println(" Pascals");
     DataOut.println("");
-    DataOut.println("Thrust (N),Volts,Amps,Torque (n-m),RPM");
+    DataOut.println("Thrust (N),Volts,Amps,Torque (in-lb),RPM");
     Serial.println("done.");
   }else{
     Serial.println("Error opening data file");
@@ -524,7 +524,7 @@ void Measure(){
 
 void Save(){
   Serial.println("Save");  
-  //Thrust (N) | Volts | Amps | Torque (n-m) | RPM
+  //Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
   DataOut.print(LCval_cal);
   DataOut.print(",");
   DataOut.print(Voltval_cal);
@@ -538,7 +538,7 @@ void Save(){
 }
 
 void SerialSave(){ 
-  //Thrust (N) | Volts | Amps | Torque (n-m) | RPM
+  //Thrust (N) | Volts | Amps | Torque (lb-in) | RPM
   Serial.print(LCval_cal);
   Serial.print(",");
   Serial.print(Voltval_cal);
@@ -556,6 +556,8 @@ void SafetyCheck(){
     SendWarning();
   }
   if(Voltage < Min_Volt || Amp > Max_Amp || Power > Max_Power){
+    //Removed for Testing
+
     //Serial.println("Ending Test");
     //Uncomment when the voltage is working
     //esc.writeMicroseconds(1000);
@@ -588,7 +590,8 @@ void Thrust_Measurement(){
 }
 
 void CalibrateLC(){
-  LCval_cal = LCcal_factor * (LCval-LCoffset) * LCmomentArm;
+  Force_on_LC = LCcal_factor * LCval - 6.88;
+  LCval_cal = Force_on_LC * LCmomentArm;
 }
 
 void Torque_Measurement(){
@@ -597,10 +600,11 @@ void Torque_Measurement(){
 }
 
 void CalibrateHall(){
-  Hallval_cal = Hallcal_factor*Hallval;
+  Hallval_cal = -182 + 1.02*Hallval + -0.00205*pow(Hallval,2) +  0.00000144*pow(Hallval,3);
 }
 
 void RPM_Measurement(){
+  //Future Work. No time to calibrate so removed
   Serial.println("RPM Start");
   while(RPMread1 == 0){
     RPMread1 = digitalRead(RPMPin);
@@ -633,18 +637,18 @@ void VoltCurrent_Measurement(){
   CalibrateVolt();
   Currval = analogRead(IoutPin);
   CalibrateCurrent();
-  Voltage = Voltval;
-  Amp = Currval;
   Power = Voltage*Amp;
 }
 
 void CalibrateVolt(){
   //Calibration function from datasheet
   Voltval_cal = Voltcal_factor*Voltval;
+  Voltage = Voltval_cal;
 }
 
 void CalibrateCurrent(){
   Currval_cal = Currcal_factor*Currval;
+  Amp = Currval_cal;
 }
 
 void Airspeed_Measurement(){
