@@ -56,11 +56,11 @@
   float Hallval_cal = 0;
 
 
-  float LCcal_factor = 12.5;      //From the datasheet by the 4V range and 50lb capacity
-  float LCoffset = 0.5;           //By the datasheet from the range of 0.5-4.5V
+  float LCcal_factor = .0166;      //From the datasheet by the 4V range and 50lb capacity
+  float LCoffset = 107;           //By the datasheet from the range of 0.5-4.5V
   float LCmomentArm = 1;
-  float Voltcal_factor = 15.625;  //Takes Vout and converts to source voltage
-  float Currcal_factor = 28.75;   //Takes Iout and converts to source current
+  float Voltcal_factor = 0.0773;  //Takes Vout and converts to source voltage
+  float Currcal_factor = 0.1335;   //Takes Iout and converts to source current
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
 
 void setup() {
@@ -111,7 +111,7 @@ void MeasureLC(){
 }
 
 void CalibrateLC(){
-  LCval_cal = LCcal_factor * (LCval-LCoffset) * LCmomentArm;
+  LCval_cal = LCcal_factor * (LCval-LCoffset);
 }
 
 void MeasureVolt(){
@@ -121,7 +121,7 @@ void MeasureVolt(){
 
 void CalibrateVolt(){
   //Calibration function from datasheet
-  Voltval_cal = Voltcal_factor*Voltval;
+  Voltval_cal = Voltcal_factor*(Voltval-1);
 }
 
 void MeasureCurrent(){
@@ -139,7 +139,8 @@ void MeasureHall(){
 }
 
 void CalibrateHall(){
-  Hallval_cal = Hallcal_factor*Hallval;
+//  Hallval_cal = -182 + 1.02*Hallval + -0.00205*pow(Hallval,2) +  0.00000144*pow(Hallval,3);
+  Hallval_cal = 26.131 - 0.771*Hallval + 0.00365*pow(Hallval,2) - 0.000006444*pow(Hallval,3) + 0.0000000040224*pow(Hallval,4);
 }
 
 void Measure280(){

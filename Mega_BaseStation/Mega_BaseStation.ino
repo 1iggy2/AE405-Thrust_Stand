@@ -157,7 +157,8 @@
   float LCcal_factor = .0166;      //From the datasheet by the 4V range and 50lb capacity
   int LC_tare = 0;
   float Voltcal_factor = 0.0773;  //Takes Vout and converts to source voltage /13 from testing R^2=1
-  float Currcal_factor = .1335;   //Takes Iout and converts to source current
+  //float Currcal_factor = 1.535/7.5;   //Takes Iout and converts to source current
+  float Currcal_factor = 1;
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
   float RPMcal_factor = 60000;    //MS per Minute
 
