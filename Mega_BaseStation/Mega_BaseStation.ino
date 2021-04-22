@@ -158,7 +158,7 @@
   int LC_tare = 0;
   float Voltcal_factor = 0.0773;  //Takes Vout and converts to source voltage /13 from testing R^2=1
   //float Currcal_factor = 1.535/7.5;   //Takes Iout and converts to source current
-  float Currcal_factor = 1;
+  float Currcal_factor = 0.17238;
   float Hallcal_factor = 1;       //UNKNOWN AND Based off flexure
   float RPMcal_factor = 60000;    //MS per Minute
 
@@ -703,7 +703,7 @@ void CalibrateVolt(){
 }
 
 void CalibrateCurrent(){
-  Currval_cal = Currcal_factor*Currval;
+  Currval_cal = Currcal_factor*Currval + 1.278;
   Amp = Currval_cal;
 }
 
