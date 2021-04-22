@@ -101,10 +101,10 @@
   int SettingButtonState = 0;
   
 //Testing Global Variables
-  int Throttle_Start = 0;
-  int Throttle_End = 0;
+  float Throttle_Start = 0;
+  float Throttle_End = 0;
   int Throttle_Step = 0;
-  int Step_Time = 0;
+  float Step_Time = 0;
   int Throttle_High = 0;
   int Throttle_Low = 0;
   float Test_Time = 0;
