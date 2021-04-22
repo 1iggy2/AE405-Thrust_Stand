@@ -226,16 +226,19 @@ void setup() {
   DataOut = SD.open(TestName, FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
-    DataOut.println("AE405 Thrust Stand,Winter 2021,,,Cameron Gable");
-    DataOut.println("Find Documentation at:, https://github.com/1iggy2/AE405-Thrust_Stand");
+    DataOut.println("AE405 Thrust Stand,,Winter 2021,,Cameron Gable");
+    DataOut.println("Cameron Gable, Hogan Hsu, Anthony Russo");
+    DataOut.println("Brian Sandor, Sergio Ramirez Sabogal");
+    DataOut.println("");
+    DataOut.println("Find Documentation at:,,https://github.com/1iggy2/AE405-Thrust_Stand");
     DataOut.println("");
     DataOut.println("Ambient Conditions:");
     DataOut.print("Temperature:,");
     DataOut.print(BMEtempFloat);
-    DataOut.print(", Celsius");
-    DataOut.println("Pressure:,");
+    DataOut.println(", Celsius");
+    DataOut.print("Pressure:,");
     DataOut.print(BMEpressFloat);
-    DataOut.println(" Pascals");
+    DataOut.println(", Pascals");
     DataOut.println("");
     DataOut.println("Throttle,Time (ms),Thrust (N),Volts,Amps,Torque (in-lb)");
     DataOut.close();
