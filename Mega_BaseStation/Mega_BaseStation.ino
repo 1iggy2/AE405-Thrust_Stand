@@ -226,7 +226,7 @@ void setup() {
   DataOut = SD.open(TestName, FILE_WRITE);
   if (DataOut){
     Serial.print("Writing SD Header...");
-    DataOut.println("AE405 Thrust Stand,,Winter 2021,,Cameron Gable");
+    DataOut.println("AE405 Thrust Stand,,Winter 2021,,");
     DataOut.println("Cameron Gable, Hogan Hsu, Anthony Russo");
     DataOut.println("Brian Sandor, Sergio Ramirez Sabogal");
     DataOut.println("");
