@@ -105,8 +105,8 @@
   float Throttle_End = 0;
   int Throttle_Step = 0;
   float Step_Time = 0;
-  int Throttle_High = 0;
-  int Throttle_Low = 0;
+  float Throttle_High = 0;
+  float Throttle_Low = 0;
   float Test_Time = 0;
   unsigned long TestStartTime;
   unsigned long CurrentTestTime;
@@ -256,22 +256,22 @@ void loop() {
     RemoteCommunication();
     CheckButtonStatus();
   }else if(A == 1){         //Throttle Sweep
-    Throttle_Start = 1000+10*BBB;
-    Throttle_End = 1000+10*CCC;
-    Test_Time = DDD*1000; //Seconds to MS
-    Step_Time = EEE*1000; //Seconds to MS
+    Throttle_Start = (float)1000+10*BBB;
+    Throttle_End = (float)1000+10*CCC;
+    Test_Time = (float)DDD*1000; //Seconds to MS
+    Step_Time = (float)EEE*1000; //Seconds to MS
     ThrottleSweep();    //Run Subfunction
     
   }else if(A == 2){         //Constant Throttle
-    Throttle_Start = 1000+10*BBB;
-    Test_Time = DDD*1000; //Seconds to MS
+    Throttle_Start = (float)1000+10*BBB;
+    Test_Time = (float)DDD*1000; //Seconds to MS
     ConstantThrottle(); //Run Subfunction
     
   }else if(A == 3){         //Stress Test
-    Throttle_High = 1000+10*BBB;
-    Throttle_Low = 1000+10*CCC;
-    Test_Time = DDD*1000;
-    Step_Time = EEE*1000;
+    Throttle_High = (float)1000+10*BBB;
+    Throttle_Low = (float)1000+10*CCC;
+    Test_Time = (float)DDD*1000;
+    Step_Time = (float)EEE*1000;
     StressTest();       //Run Subfunction
     
   }else if(A == 4){         //Sensor Output     BEGIN SERIAL OPERATIONS
